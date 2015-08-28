@@ -12,7 +12,7 @@ namespace VDMS
         {
             get
             {
-                return WebConfigurationManager.AppSettings["EmailServer"] ?? string.Empty;
+                return WebConfigurationManager.AppSettings["MailServer"] ?? string.Empty;
             }
         }
         public static string SenderAccount

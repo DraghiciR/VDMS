@@ -186,6 +186,7 @@
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\DocumentLog.cs" />
     <Compile Include="Models\DocumentType.cs" />
+    <Compile Include="Models\Helpers\ExceptionLogger.cs" />
     <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\VDMSModel.cs" />

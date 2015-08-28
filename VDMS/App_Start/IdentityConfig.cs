@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using VDMS.Models;
+using VDMS.Models.Helpers;
 
 namespace VDMS
 {
@@ -18,39 +19,44 @@ namespace VDMS
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            try
+            {
+                // Credentials:
+                string credentialUserName = ServerSettings.CredentialsUserName;
+                string sentFrom = ServerSettings.SenderAccount;
+                string pwd = ServerSettings.CredentialsPassword;
 
-            // Credentials:
-            string credentialUserName = ServerSettings.CredentialsUserName;
-            string sentFrom = ServerSettings.SenderAccount;
-            string pwd = ServerSettings.CredentialsPassword;
+                // Configure the client:
+                System.Net.Mail.SmtpClient client =
+                    new System.Net.Mail.SmtpClient(ServerSettings.ServerMail);
 
-            // Configure the client:
-            System.Net.Mail.SmtpClient client =
-                new System.Net.Mail.SmtpClient(ServerSettings.ServerMail);
+                //client.Port = 587;
+                client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
 
-            //client.Port = 587;
-            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
+                // Create the credentials:
+                System.Net.NetworkCredential credentials =
+                    new System.Net.NetworkCredential(credentialUserName, pwd);
 
-            // Create the credentials:
-            System.Net.NetworkCredential credentials =
-                new System.Net.NetworkCredential(credentialUserName, pwd);
+                client.EnableSsl = ServerSettings.EnableSsl;
+                client.Credentials = credentials;
 
-            client.EnableSsl = ServerSettings.EnableSsl;
-            client.Credentials = credentials;
+                // Create the message:
+                var mail =
+                    new System.Net.Mail.MailMessage(sentFrom, message.Destination);
 
-            // Create the message:
-            var mail =
-                new System.Net.Mail.MailMessage(sentFrom, message.Destination);
+                mail.Subject = message.Subject;
+                mail.Body = message.Body;
 
-            mail.Subject = message.Subject;
-            mail.Body = message.Body;
-
-            // Send:
-            //Wainting for smtp credentials
-            //return client.SendMailAsync(mail);
-            return Task.FromResult(0);
+                //Send:
+                //Wainting for smtp credentials
+                return client.SendMailAsync(mail);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogException(ex, "SendEmail");
+                return Task.FromResult(0);
+            }
         }
     }
 
@@ -71,7 +77,7 @@ namespace VDMS
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
@@ -112,7 +118,7 @@ namespace VDMS
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
