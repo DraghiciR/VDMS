@@ -15,14 +15,17 @@ namespace VDMS.Models
         }
 
         [Key]
+        [Display(Name = "Document Type")]
         public int DocTypeID { get; set; }
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "Type", AutoGenerateFilter = true)]
         public string Name { get; set; }
 
         [Required]
         [StringLength(3)]
+        [Display(Name = "Serial")]
         public string Serial { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

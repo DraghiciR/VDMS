@@ -19,22 +19,29 @@ namespace VDMS.Models
 
         [Required]
         [StringLength(20)]
+        [Display(Name = "Serial")]
         public string DocSerial { get; set; }
 
+        [Display(Name = "Type")]
         public int DocTypeID { get; set; }
 
+        [Display(Name = "Branch")]
         public int BranchID { get; set; }
 
+        [Display(Name = "Created By")]
         public string UserID { get; set; }
 
+        [Display(Name = "Inbound")]
         public bool Inbound { get; set; }
 
         [StringLength(100)]
+        [Display(Name = "Recipient")]
         public string Recipient { get; set; }
 
         [StringLength(255)]
         public string Description { get; set; }
 
+        [Display(Name = "Creation Date")]
         public DateTime CreationDate { get; set; }
 
         public virtual Branch Branch { get; set; }

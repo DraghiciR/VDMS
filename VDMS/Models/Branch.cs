@@ -13,14 +13,17 @@ namespace VDMS.Models
         {
             Documents = new HashSet<Document>();
         }
-
+        [Display(Name = "Branch ID")]
         public int BranchID { get; set; }
 
         [Required]
         [StringLength(100)]
+
+        [Display(Name = "Branch Name")]
         public string Name { get; set; }
 
         [StringLength(255)]
+        [Display(Name = "Branch Address")]
         public string Address { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

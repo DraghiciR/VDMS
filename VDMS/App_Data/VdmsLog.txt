@@ -1,0 +1,30 @@
+********** 8/28/2015 10:52:39 AM **********
+Exception Type: System.InvalidOperationException
+Exception: The SMTP host was not specified.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.SmtpClient.CheckHostAndPort()
+   at System.Net.Mail.SmtpClient.SendAsync(MailMessage message, Object userToken)
+   at System.Net.Mail.SmtpClient.SendMailAsync(MailMessage message)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VDMS\VDMS\App_Start\IdentityConfig.cs:line 53
+
+********** 8/28/2015 10:53:39 AM **********
+Exception Type: System.InvalidOperationException
+Exception: The SMTP host was not specified.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.SmtpClient.CheckHostAndPort()
+   at System.Net.Mail.SmtpClient.SendAsync(MailMessage message, Object userToken)
+   at System.Net.Mail.SmtpClient.SendMailAsync(MailMessage message)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VDMS\VDMS\App_Start\IdentityConfig.cs:line 53
+
+********** 8/28/2015 10:55:51 AM **********
+Exception Type: System.InvalidOperationException
+Exception: The SMTP host was not specified.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.SmtpClient.CheckHostAndPort()
+   at System.Net.Mail.SmtpClient.SendAsync(MailMessage message, Object userToken)
+   at System.Net.Mail.SmtpClient.SendMailAsync(MailMessage message)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VDMS\VDMS\App_Start\IdentityConfig.cs:line 53
+
