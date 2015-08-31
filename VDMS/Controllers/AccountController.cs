@@ -171,7 +171,7 @@ namespace VDMS.Controllers
                 if (result.Succeeded)
                 {
                     var currentUser = UserManager.FindByName(user.UserName);
-                    var roleresult = UserManager.AddToRole(currentUser.Id, "TestRole11");
+                    var roleresult = UserManager.AddToRole(currentUser.Id, "Viewer");
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
