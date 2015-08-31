@@ -1,7 +1,29 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
 }
+.vdf-logo{
+	height: 65px;
+	width: 65px;
+	margin-left: -22px;
+	display: block;
+	margin-top:15px;
+	float: left;
+}
+
+.vdf-logo img{
+	
+}
+.vdf-brand-text{
+	display: block;
+    color: #E60000;
+    font-size: 25px;
+    float:left;
+    margin-top: 27px;
+    margin-left: 10px;
+    font-weight: bold;}
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
@@ -21,4 +43,45 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+
+.vdf-menu-container{
+	background-color: #E60000;
+}
+.vdf-header-container{
+	height: 100px;
+
+}
+.vdf-footer-container{
+
+
+}
+
+
+select{
+ border-radius: 3px !important;
+ border: 1px solid #ddd !important;
+}
+
+select:focus{
+ border-color: #9c2aa0 !important;
+ border-color: rgba(156, 42, 160, 0.8) !important;
+ *border-color: #9c2aa0 !important;
+    box-shadow: 0 1px 1px rgba(156, 42, 160, 0.075) inset, 0 0 4px rgba(156, 42, 160, 0.6) !important;
+    outline: 0 none;
+}
+
+input, select, textarea{
+ border-radius: 3px !important;
+ border: 1px solid #ddd !important;
+}
+
+ input:focus, textarea:focus, select:focus{
+/*  border: 10px solid #9c2aa0 !important; */
+ border-color: #9c2aa0 !important;
+ border-color: rgba(156, 42, 160, 0.8) !important;
+ *border-color: #9c2aa0 !important;
+    box-shadow: 0 1px 1px rgba(156, 42, 160, 0.075) inset, 0 0 4px rgba(156, 42, 160, 0.6) !important;
+    outline: 0 none !important;
 }
