@@ -7,7 +7,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
@@ -87,7 +87,7 @@
                        headerStyle: "header",
                        //alternatingRowStyle: "alt",
                        selectedRowStyle: "select",
-                       columns: grid.Columns(gridColumns.ToArray()))))
+                       columns: grid.Columns(gridColumns.ToArray()))
 
         @if (grid.HasSelection)
         {

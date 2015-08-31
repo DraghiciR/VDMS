@@ -50,7 +50,8 @@ namespace VDMS
 
                 //Send:
                 //Wainting for smtp credentials
-                return client.SendMailAsync(mail);
+                //return client.SendMailAsync(mail);
+                return Task.FromResult(0);
             }
             catch (Exception ex)
             {
@@ -141,6 +142,22 @@ namespace VDMS
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+    }
+
+    public class ApplicationRoleManager : RoleManager<IdentityRole>
+    {
+        public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
+        : base(roleStore)
+        { }
+
+        public static ApplicationRoleManager Create(
+            IdentityFactoryOptions<ApplicationRoleManager> options,
+            IOwinContext context)
+        {
+            var manager = new ApplicationRoleManager(
+                new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>()));
+            return manager;
         }
     }
 }

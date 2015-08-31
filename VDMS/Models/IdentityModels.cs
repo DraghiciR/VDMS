@@ -10,6 +10,7 @@ namespace VDMS.Models
     public class ApplicationUser : IdentityUser
     {
         public DateTime LastLogin { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -18,6 +19,8 @@ namespace VDMS.Models
             return userIdentity;
         }
     }
+
+    
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -42,5 +45,8 @@ namespace VDMS.Models
             modelBuilder.Entity<IdentityRole>().ToTable("Roles").Property(p => p.Id).HasColumnName("RoleID");
         }
 
+        public System.Data.Entity.DbSet<VDMS.Models.EditUserViewModel> EditUserViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<VDMS.Models.RoleViewModel> RoleViewModels { get; set; }
     }
 }
