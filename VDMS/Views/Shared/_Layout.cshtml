@@ -34,6 +34,10 @@
                     @if (Request.IsAuthenticated && User.IsInRole("MBB Developer")){
                     <li>@Html.ActionLink("Roles Management","Index","RolesAdmin")</li>
                     }
+                    @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer")))){
+                    <li>@Html.ActionLink("Branches","Index","Branches")</li>
+                    <li>@Html.ActionLink("Document Types","Index","DocumentTypes")</li>
+                    }
 
                 </ul>
                 @Html.Partial("_LoginPartial")
