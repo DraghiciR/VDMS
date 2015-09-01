@@ -5,7 +5,10 @@
 <h2>Display documents</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 
 <html lang="en">
@@ -32,10 +35,10 @@
             color: #000;
         }
         /*.alt {
-            background-color: #FFFFFF;
-            color: #000;
-        }
-            */
+                background-color: #FFFFFF;
+                color: #000;
+            }
+                */
         .gridHead a:hover {
             text-decoration: underline;
         }
@@ -75,7 +78,7 @@
         {
             id = item.DocID
         })));
-        if (true)
+        if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocID })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocID })));
@@ -90,16 +93,16 @@
                        columns: grid.Columns(gridColumns.ToArray()))
 
         @if (grid.HasSelection)
-        {
-            document = (VDMS.Models.Document)grid.Rows[grid.SelectedIndex].Value;
+            {
+                document = (VDMS.Models.Document)grid.Rows[grid.SelectedIndex].Value;
             <b> Branch Name </b> @document.Branch.Name <br />
             <b> DocTypeID </b> @document.DocTypeID <br />
             <b> Type </b> @document.DocumentType.Name <br />
-            <b> Description </b> @document.Description <br />
-            <b> UserID </b> @document.UserID <br />
-            <b> Inbound </b> @document.Inbound <br />
-            <b> Recipient </b> @document.Recipient <br />
-            <b> CreationDate </b> @document.CreationDate <br />
+                <b> Description </b> @document.Description <br />
+                <b> UserID </b> @document.UserID <br />
+                <b> Inbound </b> @document.Inbound <br />
+                <b> Recipient </b> @document.Recipient <br />
+                <b> CreationDate </b> @document.CreationDate <br />
         }
     </div>
 </body>

@@ -1,15 +1,14 @@
 ﻿@model VDMS.Models.Document
-
 @{
     ViewBag.Title = "Create";
 }
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
+    @Html.AntiForgeryToken();
+
     <div class="form-horizontal">
         <h4>Document</h4>
         <hr />
@@ -17,19 +16,20 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DocSerial, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DocSerial, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DocSerial, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.DocSerial, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.DocTypeID, "DocTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DocTypeID", null, htmlAttributes: new { @class = "form-control" })
+                @using (Html.BeginForm("ComputeSerialNumber", "Documents"))
+                {
+                    @Html.DropDownList("DocTypeID", (SelectList)ViewBag.Values, htmlAttributes: new { @class = "form-control"/*, @onchange = "this.form.submit();"*/ })
+                }
                 @Html.ValidationMessageFor(model => model.DocTypeID, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -37,11 +37,18 @@
                 @Html.ValidationMessageFor(model => model.BranchID, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.UserID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UserID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.UserID, new
+           {
+               htmlAttributes = new
+               {
+                   @class = "form-control",
+                   @readonly = "readonly",
+                   @Value = User.Identity.Name
+               }
+           })
                 @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -75,8 +82,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CreationDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CreationDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreationDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.CreationDate, new
+           {
+               htmlAttributes =
+                                                             new
+                                                             {
+                                                                 @Value = DateTime.Now,
+                                                                 @class = "form-control",
+                                                                 @readonly = "readonly"
+                                                             }
+           })
             </div>
         </div>
 

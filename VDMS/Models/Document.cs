@@ -17,12 +17,13 @@ namespace VDMS.Models
         [Key]
         public int DocID { get; set; }
 
-        [Required]
+       // [Required]
         [StringLength(20)]
-        [Display(Name = "Serial")]
+        [Display(Name = "Document Serial")]
         public string DocSerial { get; set; }
 
         [Display(Name = "Type")]
+        [ForeignKey("DocumentType")]
         public int DocTypeID { get; set; }
 
         [Display(Name = "Branch")]
@@ -49,8 +50,6 @@ namespace VDMS.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocumentLog> DocumentLogs { get; set; }
 
-        public virtual DocumentType DocumentType { get; set; }
-
-        //public virtual User User { get; set; }
+        public virtual DocumentType DocumentType { get; set; }        
     }
 }

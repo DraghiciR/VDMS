@@ -13,8 +13,11 @@ namespace VDMS.Controllers
     public class DocumentsController : Controller
     {
         private VDMSModel db = new VDMSModel();
+        private static int counter = 0;
+        private static string date = DateTime.Today.ToString("ddMMyyy");
 
         // GET: Documents
+        [Authorize(Roles ="Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Index()
         {
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
@@ -22,6 +25,7 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Details/5
+        [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +41,7 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Create
+        [Authorize(Roles = "User,Admin,MBB Developer")]
         public ActionResult Create()
         {
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
@@ -49,8 +54,9 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
+        public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description")] Document document)
         {
+            ComputeSerialNumber(document);
             if (ModelState.IsValid)
             {
                 db.Documents.Add(document);
@@ -60,10 +66,12 @@ namespace VDMS.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
+          
             return View(document);
         }
 
         // GET: Documents/Edit/5
+        [Authorize(Roles = "Admin,MBB Developer")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -99,6 +107,7 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Delete/5
+        [Authorize(Roles = "MBB Developer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -131,6 +140,14 @@ namespace VDMS.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void ComputeSerialNumber(Document document)
+        {
+            string typeSerial = (from docTypes in db.DocumentTypes
+                                 where docTypes.DocTypeID == document.DocTypeID
+                                 select docTypes.Serial).FirstOrDefault();
+             document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;        
         }
     }
 }

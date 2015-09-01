@@ -94,7 +94,7 @@ namespace VDMS.Controllers
                     var u = await UserManager.FindByNameAsync(model.Email);
                     u.LastLogin = DateTime.Now;               
                     UserManager.Update(u);
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Documents"); //RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -425,7 +425,7 @@ namespace VDMS.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

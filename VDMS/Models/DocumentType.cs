@@ -25,7 +25,7 @@ namespace VDMS.Models
 
         [Required]
         [StringLength(3)]
-        [Display(Name = "Serial")]
+        [Display(Name = "Type Serial")]
         public string Serial { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
