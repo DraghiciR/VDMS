@@ -85,3 +85,56 @@ input, select, textarea{
     box-shadow: 0 1px 1px rgba(156, 42, 160, 0.075) inset, 0 0 4px rgba(156, 42, 160, 0.6) !important;
     outline: 0 none !important;
 }
+
+#vdf-home {
+	margin-left: -20px;
+    width: 60px;
+    height: 50px;
+    background: url(../vdf-home.png);
+    background-position-x: 4px;
+    background-position-y: -2px;
+    background-repeat-x: no-repeat;
+    background-repeat-y: no-repeat;
+    background-attachment: initial;
+    background-origin: initial;
+    background-size: 48px 51px;
+    background-color: transparent
+}
+li#vdf-home:hover {
+	background-color: #CD0000;
+
+}
+#vdf-home a {
+	width: 40px;
+	height: 40px;
+}
+
+
+
+
+@media screen and (max-width: 497px) {
+    .vdf-brand-text{
+    	font-size:19px;
+    	margin-top: 32px; 	
+
+    }
+    }
+
+
+
+@media screen and (max-width: 768px) {
+     #vdf-home{
+     	margin-left:0px;
+     	height:40px;
+     	width: 100%
+
+     }
+
+     #vdf-home a{
+     	
+     	width: 100%;
+     }
+    }
+
+
+
