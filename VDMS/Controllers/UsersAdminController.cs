@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 namespace VDMS.Controllers
 {   
-   
+    [Authorize(Roles = "HelpDesk, MBB Developer")]
     public class UsersAdminController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -89,15 +89,11 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Email")] RegisterViewModel userViewModel, params string[] selectedRoles)
+        public async Task<ActionResult> Create(RegisterViewModel userViewModel, params string[] selectedRoles)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = userViewModel.Email,
-                    Email = userViewModel.Email                   
-                };
+                var user = new ApplicationUser(){ UserName = userViewModel.Email, Email = userViewModel.Email };
 
                 // Then create:
                 var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
@@ -147,6 +143,7 @@ namespace VDMS.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed,
                 RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
                 {
                     Selected = userRoles.Contains(x.Name),
@@ -162,7 +159,7 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Email")] EditUserViewModel editUser, params string[] selectedRole)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Email,EmailConfirmed")] EditUserViewModel editUser, params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {
@@ -173,7 +170,8 @@ namespace VDMS.Controllers
                 }
 
                 user.UserName = editUser.Email;
-                user.Email = editUser.Email;                
+                user.Email = editUser.Email;
+                user.EmailConfirmed = editUser.EmailConfirmed;           
 
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
 

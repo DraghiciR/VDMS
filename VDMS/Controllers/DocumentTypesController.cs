@@ -10,6 +10,7 @@ using VDMS.Models;
 
 namespace VDMS.Controllers
 {
+    [Authorize(Roles = "HelpDesk, MBB Developer")]
     public class DocumentTypesController : Controller
     {
         private VDMSModel db = new VDMSModel();

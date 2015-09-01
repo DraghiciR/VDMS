@@ -22,6 +22,7 @@ namespace VDMS.Models
             [Display(Name = "Email")]
             [EmailAddress]
             public string Email { get; set; }
+            public bool EmailConfirmed { get; set; }            
 
             public IEnumerable<SelectListItem> RolesList { get; set; }
         }

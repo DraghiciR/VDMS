@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-     
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
@@ -10,9 +10,9 @@
 </head>
 <body>
     <div class="container vdf-header-container">
-               <img src="~/logo.png" class="img-responsive vdf-logo" />
+        <img src="~/logo.png" class="img-responsive vdf-logo" />
         <span class="vdf-brand-text">Vodafone Outbound Inbound Docs</span>
-        </div>
+    </div>
     </div>
     <div class="navbar navbar-inverse ">
         <div class="container vdf-menu-container">
@@ -22,13 +22,23 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-               
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    
+
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                   
+                    @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer")))){
+                    <li>@Html.ActionLink("User Management","Index","UsersAdmin")</li>
+                    }
+                    @if (Request.IsAuthenticated && User.IsInRole("MBB Developer")){
+                    <li>@Html.ActionLink("Roles Management","Index","RolesAdmin")</li>
+                    }
+                    @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer")))){
+                    <li>@Html.ActionLink("Branches","Index","Branches")</li>
+                    <li>@Html.ActionLink("Document Types","Index","DocumentTypes")</li>
+                    }
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
