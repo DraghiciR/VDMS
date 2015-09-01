@@ -27,12 +27,15 @@ namespace VDMS.Models
         public ApplicationDbContext()
             : base("VDMSConnectionString", throwIfV1Schema: false)
         {
+            this.Configuration.LazyLoadingEnabled = true;
         }
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

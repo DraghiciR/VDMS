@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 
 namespace VDMS.Controllers
 {
+    [Authorize(Roles = "HelpDesk")]
     public class RolesAdminController : Controller
     {
         private ApplicationUserManager _userManager;
