@@ -1,4 +1,5 @@
-﻿.container-fluid {
+﻿
+.container-fluid {
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
@@ -110,7 +111,45 @@ li#vdf-home:hover {
 }
 
 
+table a {
+	color:#fff;
+}
+table >tbody> tr > td > a {
+	color: #9c2aa0;
+}
+table {
+    margin-left:-14px;
+    width:102.5% !important;
 
+}
+
+
+table th a:hover{
+	color: #9B919B;
+}
+
+table th:hover{
+	background-color:#CD0000;
+}
+table th ,td{
+	border: 1px solid #C0C0C0;
+    padding: 5px;
+    color: #000 !important;
+}
+
+
+
+.header {
+            background-color: #E60000;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+tr:nth-of-type(even) { 
+  background: #F1F1F1; 
+}
+
+}
 
 @media screen and (max-width: 497px) {
     .vdf-brand-text{
@@ -120,6 +159,9 @@ li#vdf-home:hover {
     }
     }
 
+
+    
+    
 
 
 @media screen and (max-width: 768px) {
@@ -136,5 +178,47 @@ li#vdf-home:hover {
      }
     }
 
+@media screen and (max-width: 650px) {
 
-
+/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; }
+		
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+    .vdf-doc td:nth-of-type(1):before { content: "DocSerial"; }
+    .vdf-doc td:nth-of-type(2):before { content: "Branch Name"; }
+	.vdf-doc td:nth-of-type(3):before { content: "Type"; }
+	.vdf-doctd:nth-of-type(4):before { content: "Created by"; }
+	.vdf-doc td:nth-of-type(5):before { content: "Inbound"; }
+	.vdf-doc td:nth-of-type(6):before { content: "Recipient"; }
+	.vdf-doc td:nth-of-type(7):before { content: "Description"; }
+	.vdf-doc td:nth-of-type(8):before { content: "Creation Date"; 
+	}
+}
