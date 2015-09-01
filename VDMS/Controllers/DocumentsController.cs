@@ -7,7 +7,10 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using VDMS.Models;
-
+using VDMS.Models.Helpers;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity.EntityFramework;
 namespace VDMS.Controllers
 {
     public class DocumentsController : Controller
@@ -61,6 +64,7 @@ namespace VDMS.Controllers
             {
                 db.Documents.Add(document);
                 db.SaveChanges();
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "C");
                 return RedirectToAction("Index");
             }
 
@@ -99,6 +103,7 @@ namespace VDMS.Controllers
             {
                 db.Entry(document).State = EntityState.Modified;
                 db.SaveChanges();
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "E");
                 return RedirectToAction("Index");
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
@@ -130,6 +135,7 @@ namespace VDMS.Controllers
             Document document = db.Documents.Find(id);
             db.Documents.Remove(document);
             db.SaveChanges();
+            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "D");
             return RedirectToAction("Index");
         }
 

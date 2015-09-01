@@ -9,7 +9,7 @@ namespace VDMS.Models
     public partial class DocumentLog
     {
         [Key]
-        public int LogID { get; set; }
+        public int DocLogID { get; set; }
 
         public int DocID { get; set; }
 

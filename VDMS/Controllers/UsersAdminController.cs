@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using VDMS.Models.Helpers;
 
 namespace VDMS.Controllers
 {   
@@ -101,14 +102,19 @@ namespace VDMS.Controllers
                 //Add User to the selected Roles 
                 if (adminresult.Succeeded)
                 {
+                    
                     if (selectedRoles != null)
                     {
                         var result = await UserManager.AddToRolesAsync(user.Id, selectedRoles);
                         if (!result.Succeeded)
                         {
                             ModelState.AddModelError("", result.Errors.First());
-                            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
+                            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");                            
                             return View();
+                        }
+                        else
+                        {
+                            OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "C");
                         }
                     }
                 }
@@ -178,6 +184,7 @@ namespace VDMS.Controllers
                 selectedRole = selectedRole ?? new string[] { };
 
                 var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+                
 
                 if (!result.Succeeded)
                 {
@@ -190,6 +197,10 @@ namespace VDMS.Controllers
                 {
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
+                }
+                else
+                {
+                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "E");
                 }
                 return RedirectToAction("Index");
             }
@@ -234,6 +245,10 @@ namespace VDMS.Controllers
                 {
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
+                }
+                else
+                {
+                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "D");
                 }
                 return RedirectToAction("Index");
             }
