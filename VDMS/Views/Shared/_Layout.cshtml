@@ -27,7 +27,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
 
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li id="vdf-home">@Html.ActionLink(" ", "Index", "Home")</li>
                     @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer")))){
                     <li>@Html.ActionLink("User Management","Index","UsersAdmin")</li>
                     }
