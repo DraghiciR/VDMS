@@ -24,12 +24,12 @@ namespace VDMS.Models.Helpers
         private static VDMSModel _db = new VDMSModel();
         public static void LogUserEvent(string IDuser, string IDaffecteduser, string typeOperation)
         {
-            UserLog userlog = new UserLog { UserID = IDuser, AffectedUserID = IDaffecteduser, OperationType = typeOperation, LogDate = DateTime.Now };
-            _db.UserLogs.Add(userlog);
-            _db.SaveChanges();
+            
             try
             {
-                
+                UserLog userlog = new UserLog { UserID = IDuser, AffectedUserID = IDaffecteduser, OperationType = typeOperation, LogDate = DateTime.Now };
+                _db.UserLogs.Add(userlog);
+                _db.SaveChanges();
             }
             catch (Exception ex)
             {
