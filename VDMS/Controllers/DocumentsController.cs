@@ -40,7 +40,7 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
-            OperationLogger.GetEnumDescription(OperationType.View);
+            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.View));
             return View(document);
         }
 
