@@ -8,7 +8,7 @@ namespace VDMS.Models
 
     public partial class UserLog
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int UserLogID { get; set; }
 
         public string UserID { get; set; }

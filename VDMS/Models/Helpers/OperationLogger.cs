@@ -24,11 +24,12 @@ namespace VDMS.Models.Helpers
         private static VDMSModel _db = new VDMSModel();
         public static void LogUserEvent(string IDuser, string IDaffecteduser, string typeOperation)
         {
+            UserLog userlog = new UserLog { UserID = IDuser, AffectedUserID = IDaffecteduser, OperationType = typeOperation, LogDate = DateTime.Now };
+            _db.UserLogs.Add(userlog);
+            _db.SaveChanges();
             try
             {
-                UserLog userlog = new UserLog { UserID = IDuser, AffectedUserID = IDaffecteduser, OperationType = typeOperation, LogDate = DateTime.Now };
-                _db.UserLogs.Add(userlog);
-                _db.SaveChanges();
+                
             }
             catch (Exception ex)
             {
@@ -39,13 +40,12 @@ namespace VDMS.Models.Helpers
         }
 
         public static void LogDocumentEvent(string IDuser, int IDdoc, string typeOperation)
-        {
-            DocumentLog documentlog = new DocumentLog { UserID = IDuser, DocID = IDdoc, OperationType = typeOperation, LogDate = DateTime.Now };
-            _db.DocumentLogs.Add(documentlog);
-            _db.SaveChanges();
+        {            
             try
             {
-                
+                DocumentLog documentlog = new DocumentLog { UserID = IDuser, DocID = IDdoc, OperationType = typeOperation, LogDate = DateTime.Now };
+                _db.DocumentLogs.Add(documentlog);
+                _db.SaveChanges();
             }
             catch (Exception ex)
             {
