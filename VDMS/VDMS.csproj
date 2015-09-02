@@ -194,6 +194,7 @@
     <Compile Include="Models\DocumentLog.cs" />
     <Compile Include="Models\DocumentType.cs" />
     <Compile Include="Models\Helpers\ExceptionLogger.cs" />
+    <Compile Include="Models\Helpers\OperationLogger.cs" />
     <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\VDMSModel.cs" />
@@ -292,6 +293,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\UserLog\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

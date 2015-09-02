@@ -8,11 +8,11 @@ namespace VDMS.Models
 
     public partial class Document
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Document()
-        {
-            DocumentLogs = new HashSet<DocumentLog>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public Document()
+        //{
+        //    //DocumentLogs = new HashSet<DocumentLog>();
+        //}
 
         [Key]
         public int DocID { get; set; }
@@ -47,8 +47,8 @@ namespace VDMS.Models
 
         public virtual Branch Branch { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentLog> DocumentLogs { get; set; }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<DocumentLog> DocumentLogs { get; set; }
 
         public virtual DocumentType DocumentType { get; set; }        
     }

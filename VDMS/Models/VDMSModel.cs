@@ -53,10 +53,10 @@ namespace VDMS.Models
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Document>()
-                .HasMany(e => e.DocumentLogs)
-                .WithRequired(e => e.Document)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Document>()
+            //    .HasMany(e => e.DocumentLogs)
+            //    .WithRequired(e => e.Document)
+            //    .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<DocumentType>()
                 .Property(e => e.Name)
