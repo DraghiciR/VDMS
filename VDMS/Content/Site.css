@@ -164,7 +164,7 @@ tr:nth-of-type(even) {
     
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 990px) {
      #vdf-home{
      	margin-left:0px;
      	height:40px;
@@ -215,7 +215,7 @@ tr:nth-of-type(even) {
     .vdf-doc td:nth-of-type(1):before { content: "DocSerial"; }
     .vdf-doc td:nth-of-type(2):before { content: "Branch Name"; }
 	.vdf-doc td:nth-of-type(3):before { content: "Type"; }
-	.vdf-doctd:nth-of-type(4):before { content: "Created by"; }
+	.vdf-doc td:nth-of-type(4):before { content: "Created by"; }
 	.vdf-doc td:nth-of-type(5):before { content: "Inbound"; }
 	.vdf-doc td:nth-of-type(6):before { content: "Recipient"; }
 	.vdf-doc td:nth-of-type(7):before { content: "Description"; }
