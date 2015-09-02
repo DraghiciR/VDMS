@@ -40,6 +40,7 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
+            OperationLogger.GetEnumDescription(OperationType.View);
             return View(document);
         }
 
@@ -64,7 +65,7 @@ namespace VDMS.Controllers
             {
                 db.Documents.Add(document);
                 db.SaveChanges();
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "C");
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
                 return RedirectToAction("Index");
             }
 
@@ -103,7 +104,7 @@ namespace VDMS.Controllers
             {
                 db.Entry(document).State = EntityState.Modified;
                 db.SaveChanges();
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "E");
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
                 return RedirectToAction("Index");
             }
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
@@ -135,7 +136,7 @@ namespace VDMS.Controllers
             Document document = db.Documents.Find(id);
             db.Documents.Remove(document);
             db.SaveChanges();
-            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, "D");
+            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Delete));
             return RedirectToAction("Index");
         }
 

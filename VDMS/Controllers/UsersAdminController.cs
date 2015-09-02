@@ -114,7 +114,7 @@ namespace VDMS.Controllers
                         }
                         else
                         {
-                            OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "C");
+                            OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Create));
                         }
                     }
                 }
@@ -200,7 +200,7 @@ namespace VDMS.Controllers
                 }
                 else
                 {
-                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "E");
+                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Edit));
                 }
                 return RedirectToAction("Index");
             }
@@ -248,7 +248,7 @@ namespace VDMS.Controllers
                 }
                 else
                 {
-                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, "D");
+                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Delete));
                 }
                 return RedirectToAction("Index");
             }

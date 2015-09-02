@@ -16,7 +16,7 @@ namespace VDMS.Models
         public string UserID { get; set; }
 
         [Required]
-        [StringLength(1)]
+        [StringLength(30)]
         public string OperationType { get; set; }
 
         public DateTime LogDate { get; set; }
