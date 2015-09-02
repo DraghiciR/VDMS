@@ -1,70 +1,71 @@
 ﻿@model IEnumerable<VDMS.Models.Document>
-@{
+    @{
     ViewBag.Title = "Index";
-}
-<h2>Display documents</h2>
+    }
+    <h2>Display documents</h2>
 
-<p>
-    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
-    {
+    <p>
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+        {
         @Html.ActionLink("Create New", "Create")
-    }
-</p>
+        }
+    </p>
 
-<html lang="en">
-<head>
-    <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
-    
+    <html lang="en">
+    <head>
+        <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
 
-    
-</head>
-<body>
-    @{
+
+
+    </head>
+    <body>
+        @{
         VDMS.Models.Document document = new VDMS.Models.Document();
-    }
-    @{
+        }
+        @{
         var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
         grid.Pager(WebGridPagerModes.NextPrevious);
 
-        var gridColumns = new List<WebGridColumn>();
-        gridColumns.Add(grid.Column("DocSerial", format: (item) => item.GetSelectLink(item.DocSerial)));
-        gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
-        gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
-        gridColumns.Add(grid.Column("UserID", "Created by"));
-        gridColumns.Add(grid.Column("Inbound", "Inbound"));
-        gridColumns.Add(grid.Column("Recipient", "Recipient"));
-        gridColumns.Add(grid.Column("Description", "Description", style: "description"));
-        gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("d")));
-        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
-        {
+        var gridColumns = new List<WebGridColumn>
+            ();
+            gridColumns.Add(grid.Column("DocSerial", format: (item) => item.GetSelectLink(item.DocSerial)));
+            gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
+            gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
+            gridColumns.Add(grid.Column("UserID", "Created by"));
+            gridColumns.Add(grid.Column("Inbound", "Inbound"));
+            gridColumns.Add(grid.Column("Recipient", "Recipient"));
+            gridColumns.Add(grid.Column("Description", "Description", style: "description"));
+            gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("d")));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
+            {
             id = item.DocID
-        })));
-        if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
-        {
+            })));
+            if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+            {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocID })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocID })));
-        }
-    }
+            }
+            }
 
-    <div id="gridContent">
-        @grid.GetHtml(tableStyle: "vdf-doc",
-                       headerStyle: "header",
-                       //alternatingRowStyle: "alt",
-                       selectedRowStyle: "select",
-                       columns: grid.Columns(gridColumns.ToArray()))
+            <div id="gridContent">
+                @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+                headerStyle: "header",
+                //alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(gridColumns.ToArray()))
 
-        @if (grid.HasSelection)
-            {
+                @if (grid.HasSelection)
+                {
                 document = (VDMS.Models.Document)grid.Rows[grid.SelectedIndex].Value;
-            <b> Branch Name </b> @document.Branch.Name <br />
-            <b> DocTypeID </b> @document.DocTypeID <br />
-            <b> Type </b> @document.DocumentType.Name <br />
+                <b> Branch Name </b> @document.Branch.Name <br />
+                <b> DocTypeID </b> @document.DocTypeID <br />
+                <b> Type </b> @document.DocumentType.Name <br />
                 <b> Description </b> @document.Description <br />
                 <b> UserID </b> @document.UserID <br />
                 <b> Inbound </b> @document.Inbound <br />
                 <b> Recipient </b> @document.Recipient <br />
                 <b> CreationDate </b> @document.CreationDate <br />
-        }
-    </div>
-</body>
+                }
+            </div>
+    </body>
 </html>

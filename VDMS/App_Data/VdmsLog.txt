@@ -80,3 +80,13 @@ Stack Trace:
    at System.Data.Entity.DbContext.SaveChanges()
    at VDMS.Models.Helpers.OperationLogger.LogUserEvent(String IDuser, String IDaffecteduser, String typeOperation) in C:\Users\TabacariM\Documents\Vodafone Projects\VodafoneDocumentTrackingSystem\VDMS\Models\Helpers\OperationLogger.cs:line 17
 
+********** 02-Sep-15 12:05:36 **********
+Exception Type: System.Data.Entity.Validation.DbEntityValidationException
+Exception: Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
+Source: OperationLogger.LogDocumentEvent
+Stack Trace: 
+   at System.Data.Entity.Internal.InternalContext.SaveChanges()
+   at System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   at System.Data.Entity.DbContext.SaveChanges()
+   at VDMS.Models.Helpers.OperationLogger.LogDocumentEvent(String IDuser, Int32 IDdoc, String typeOperation) in C:\Users\TabacariM\Documents\Vodafone Projects\VodafoneDocumentTrackingSystem\VDMS\Models\Helpers\OperationLogger.cs:line 47
+

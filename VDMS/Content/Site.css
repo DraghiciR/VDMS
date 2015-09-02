@@ -119,24 +119,32 @@ table >tbody> tr > td > a {
 }
 table {
     margin-left:-14px;
-    width:102.5% !important;
+    width:102.5%;
 
 }
 
 
 table th a:hover{
-	color: #9B919B;
+	color:#fefefe;
 }
 
 table th:hover{
 	background-color:#CD0000;
+	text-decoration: none;
 }
 table th ,td{
 	border: 1px solid #C0C0C0;
     padding: 5px;
-    color: #000 !important;
+    color: #000 ;
 }
 
+
+table th:hover{
+	color:#fff;
+}
+table th>a{
+	text-decoration: none !important;
+}
 
 
 .header {
@@ -149,7 +157,7 @@ tr:nth-of-type(even) {
   background: #F1F1F1; 
 }
 
-}
+
 
 @media screen and (max-width: 497px) {
     .vdf-brand-text{
@@ -161,10 +169,12 @@ tr:nth-of-type(even) {
 
 
     
-    
+
 
 
 @media screen and (max-width: 990px) {
+
+
      #vdf-home{
      	margin-left:0px;
      	height:40px;
