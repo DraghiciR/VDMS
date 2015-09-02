@@ -10,6 +10,7 @@ using System.Net;
 
 namespace VDMS.Controllers
 {
+    [Authorize(Roles = "MBB Developer")]
     public class RolesController : Controller
     {
         ApplicationDbContext context = new ApplicationDbContext();
