@@ -20,7 +20,7 @@ namespace VDMS.Controllers
         private static string date = DateTime.Today.ToString("ddMMyyy");
 
         // GET: Documents
-        [Authorize(Roles ="Viewer,User,Admin,Helpdesk,MBB Developer")]
+        [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Index()
         {
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
@@ -70,7 +70,7 @@ namespace VDMS.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
-          
+
             return View(document);
         }
 
@@ -139,6 +139,15 @@ namespace VDMS.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Documents
+        [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
+        public ActionResult Reports()
+        {
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -153,7 +162,7 @@ namespace VDMS.Controllers
             string typeSerial = (from docTypes in db.DocumentTypes
                                  where docTypes.DocTypeID == document.DocTypeID
                                  select docTypes.Serial).FirstOrDefault();
-             document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;        
+            document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;
         }
     }
 }
