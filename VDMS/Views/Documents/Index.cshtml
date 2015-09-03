@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<VDMS.Models.Document>
     @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Documents";
     }
-    <h2>Display documents</h2>
+    <h2>Documents</h2>
 
     <p>
         @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer") || (User.IsInRole("User")))))
