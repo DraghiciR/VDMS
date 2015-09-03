@@ -250,9 +250,13 @@ namespace VDMS.Controllers
         }
         private string GetUserName(string userID)
         {
-            return (from users in users
-                    where users.Id == userID
-                    select users.Email).FirstOrDefault() ?? string.Empty;
+            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var user =  UserManager.FindById(userID);
+            return user.UserName;
+
+            //return (from users in users
+            //        where users.Id == userID
+            //        select users.Email).FirstOrDefault() ?? string.Empty;
         }
     }
 }
