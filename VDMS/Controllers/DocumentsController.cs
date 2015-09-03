@@ -251,7 +251,7 @@ namespace VDMS.Controllers
         private string GetUserName(string userID)
         {
             ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var user =  UserManager.FindById(userID);
+            ApplicationUser user =  UserManager.FindById(userID);
             return user.UserName;
 
             //return (from users in users
