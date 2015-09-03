@@ -61,19 +61,21 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description")] Document document)
+        public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
         {
             ComputeSerialNumber(document);
             if (ModelState.IsValid)
             {
+                string currUserID = User.Identity.GetUserId();
+                document.UserID = currUserID;
                 db.Documents.Add(document);
                 db.SaveChanges();
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
+                OperationLogger.LogDocumentEvent(currUserID, document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
                 return RedirectToAction("Index");
             }
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);            
 
             return View(document);
         }
