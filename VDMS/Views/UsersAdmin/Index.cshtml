@@ -1,34 +1,38 @@
 ﻿@model IEnumerable<VDMS.Models.ApplicationUser>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Users";
 }
 
-<h2>Index</h2>
+<h2>Users</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) 
-            @if (Request.IsAuthenticated && User.IsInRole("MBB Developer")){                     
-            @Html.ActionLink("| Delete", "Delete", new { id=item.Id })}
-        </td>
-    </tr>
-}
+<body>
+    @{
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        grid.Pager(WebGridPagerModes.NextPrevious);
 
-</table>
+        var gridColumns = new List<WebGridColumn>();
+        gridColumns.Add(grid.Column("Email", "Email"));
+        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
+        {
+            id = item.Id
+        })));
+        if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+        {
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));
+        }
+    }
+
+    <div id="gridContent">
+        @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+                headerStyle: "header",
+                //alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+                columns: grid.Columns(gridColumns.ToArray()))
+    </div>
+</body>
