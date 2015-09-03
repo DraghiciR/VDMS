@@ -43,5 +43,12 @@ namespace VDMS
                 return Convert.ToBoolean(WebConfigurationManager.AppSettings["EnableSsl"]);
             }
         }
+        public static string SqlConnectionString
+        {
+            get
+            {
+                return WebConfigurationManager.ConnectionStrings["VDMSConnectionString"].ToString() ?? string.Empty;
+            }
+        }
     }
 }

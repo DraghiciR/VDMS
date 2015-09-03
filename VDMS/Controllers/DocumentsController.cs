@@ -11,6 +11,9 @@ using VDMS.Models.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Globalization;
+using System.Data.SqlClient;
+
 namespace VDMS.Controllers
 {
     public class DocumentsController : Controller
@@ -146,7 +149,68 @@ namespace VDMS.Controllers
         {
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
-            return View();
+
+            var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
+            return View(documents.ToList());
+        }
+
+        // POST: Documents/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        {
+            List<Document> documents = new List<Document>();
+
+            string whereClause = string.Empty;
+            whereClause += string.Format(" creationdate >= '{0}'", startDate ?? DateTime.MinValue);
+            whereClause += string.Format(" and creationdate <= '{0}'", endDate ?? DateTime.Now);
+            whereClause += string.Format((docTypeID.HasValue ? " and doctypeid = {0}" : string.Empty), docTypeID);
+            whereClause += string.Format((branchID.HasValue ? " and branchid = {0}" : string.Empty), branchID);
+            whereClause += string.Format((!string.IsNullOrEmpty(userID) ? " and userid = '{0}'" : " and userid is not null"), userID);
+            whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient = '{0}'" : " and recipient is not null"), recipient);
+            whereClause += string.Format(" and [inbound] = '{0}'", inbound);
+
+            using (SqlConnection sqlConn = new SqlConnection(ServerSettings.SqlConnectionString))
+            {
+                sqlConn.Open();
+
+                using (SqlCommand sqlComm = sqlConn.CreateCommand())
+                {
+                    sqlComm.CommandType = CommandType.Text;
+                    sqlComm.CommandText = string.Format("SELECT DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,[Description],CreationDate FROM dbo.Documents WHERE {0}",whereClause);
+
+                    using (SqlDataReader reader = sqlComm.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Document document = new Document()
+                            {
+                                DocID = (int)reader["DocID"],
+                                DocSerial = reader["DocSerial"].ToString(),
+                                DocTypeID = (int)reader["DocTypeID"],
+                                BranchID = (int)reader["BranchID"],
+                                UserID = reader["UserID"].ToString(),
+                                Inbound = (bool)reader["Inbound"],
+                                Recipient = reader["Recipient"].ToString(),
+                                Description = reader["Description"].ToString(),
+                                CreationDate = (DateTime)reader["CreationDate"]
+                            };
+
+                            document.Branch = db.Branches.First(b => b.BranchID == document.BranchID);
+                            document.DocumentType = db.DocumentTypes.First(b => b.DocTypeID == document.DocTypeID);
+
+                            documents.Add(document);
+                        }
+                    }
+                }
+            }
+
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+
+            return View(documents);
         }
 
         protected override void Dispose(bool disposing)

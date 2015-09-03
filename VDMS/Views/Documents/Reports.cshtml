@@ -1,4 +1,4 @@
-﻿@model VDMS.Models.Document
+﻿@model IEnumerable<VDMS.Models.Document>
 @{
     ViewBag.Title = "Reports";
 }
@@ -15,70 +15,102 @@
     </script>
 </head>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken();
+<body>
 
-    <div class="form-horizontal">
-        <hr />
+    @{
+        VDMS.Models.Document document = new VDMS.Models.Document();
+    }
+    @{
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        grid.Pager(WebGridPagerModes.NextPrevious);
 
-        @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
-        @Html.TextBox("StartDate", "", new { @class = "form-control date-picker" })
-        @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
-        @Html.TextBox("EndDate", "", new { @class = "form-control date-picker" })
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        var gridColumns = new List<WebGridColumn>();
+        gridColumns.Add(grid.Column("DocSerial", "DocSerial"));
+        gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
+        gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
+        gridColumns.Add(grid.Column("UserID", "Created by"));
+        gridColumns.Add(grid.Column("Inbound", "Inbound"));
+        gridColumns.Add(grid.Column("Recipient", "Recipient"));
+        gridColumns.Add(grid.Column("Description", "Description", style: "description"));
+        gridColumns.Add(grid.Column("CreationDate", "Creation Date"));
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DocTypeID, "DocTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("DocTypeID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DocTypeID, "", new { @class = "text-danger" })
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken();
+
+        <div class="form-horizontal">
+            <hr />
+
+            <div class="form-group">
+                @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("BranchID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BranchID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserID, new
-           {
-               htmlAttributes = new
-               {
-                   @class = "form-control",
-                   @Value = User.Identity.Name
-               }
-           })
-                @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Inbound, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="form-group">
+                @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => document.DocTypeID, "DocTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => document.DocTypeID, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => document.DocTypeID)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => document.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => document.BranchID, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => document.BranchID)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBox("UserID", "", new { @class = "form-control", @Value = User.Identity.Name })
+                    @Html.ValidationMessageFor(model => model.FirstOrDefault().UserID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="checkbox">
-                    @Html.EditorFor(model => model.Inbound)
-                    @Html.ValidationMessageFor(model => model.Inbound, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => document.Inbound, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.CheckBox("Inbound", new { @checked = "checked" })
+                        @Html.HiddenFor(model => document.Inbound)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => document.Recipient, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => document.Recipient, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => document.Recipient, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Generate" class="btn btn-default" />
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Recipient, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Recipient, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Recipient, "", new { @class = "text-danger" })
-            </div>
+        <div id="gridContent">
+            @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+                headerStyle: "header",
+                selectedRowStyle: "select",
+                columns: grid.Columns(gridColumns.ToArray()))
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Generate" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
 
+    }
+</body>
