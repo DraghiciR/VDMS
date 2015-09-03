@@ -5,7 +5,7 @@
     <h2>Display documents</h2>
 
     <p>
-        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer") || (User.IsInRole("User")))))
         {
         @Html.ActionLink("Create New", "Create")
         }
@@ -14,9 +14,6 @@
     <html lang="en">
     <head>
         <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
-
-
-
     </head>
     <body>
         @{
