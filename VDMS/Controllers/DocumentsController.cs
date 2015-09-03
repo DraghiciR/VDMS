@@ -197,26 +197,30 @@ namespace VDMS.Controllers
 
                     using (SqlDataReader reader = sqlComm.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            Document document = new Document()
+                            while (reader.Read())
                             {
-                                DocID = (int)reader["DocID"],
-                                DocSerial = reader["DocSerial"].ToString(),
-                                DocTypeID = (int)reader["DocTypeID"],
-                                BranchID = (int)reader["BranchID"],
-                                UserID = reader["UserID"].ToString(),
-                                Inbound = (bool)reader["Inbound"],
-                                Recipient = reader["Recipient"].ToString(),
-                                Description = reader["Description"].ToString(),
-                                CreationDate = (DateTime)reader["CreationDate"]
-                            };
+                                Document document = new Document()
+                                {
+                                    DocID = (int)reader["DocID"],
+                                    DocSerial = reader["DocSerial"].ToString(),
+                                    DocTypeID = (int)reader["DocTypeID"],
+                                    BranchID = (int)reader["BranchID"],
+                                    UserID = reader["UserID"].ToString(),
+                                    Inbound = (bool)reader["Inbound"],
+                                    Recipient = reader["Recipient"].ToString(),
+                                    Description = reader["Description"].ToString(),
+                                    CreationDate = (DateTime)reader["CreationDate"]
+                                };
 
-                            document.Branch = db.Branches.First(b => b.BranchID == document.BranchID);
-                            document.DocumentType = db.DocumentTypes.First(b => b.DocTypeID == document.DocTypeID);
-                            document.UserName = GetUserName(document.UserID);
-                            documents.Add(document);
+                                document.Branch = db.Branches.First(b => b.BranchID == document.BranchID);
+                                document.DocumentType = db.DocumentTypes.First(b => b.DocTypeID == document.DocTypeID);
+                                document.UserName = GetUserName(document.UserID);
+                                documents.Add(document);
+                            }
                         }
+                       
                     }
                 }
             }
