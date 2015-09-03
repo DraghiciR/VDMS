@@ -8,16 +8,10 @@ namespace VDMS.Models
 
     public partial class Document
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public Document()
-        //{
-        //    //DocumentLogs = new HashSet<DocumentLog>();
-        //}
-
         [Key]
         public int DocID { get; set; }
 
-       // [Required]
+        // [Required]
         [StringLength(20)]
         [Display(Name = "Document Serial")]
         public string DocSerial { get; set; }
@@ -29,7 +23,7 @@ namespace VDMS.Models
         [Display(Name = "Branch")]
         public int BranchID { get; set; }
 
-        [Display(Name = "Created By")]
+        [Display(Name = "UserID")]
         public string UserID { get; set; }
 
         [Display(Name = "Inbound")]
@@ -47,9 +41,9 @@ namespace VDMS.Models
 
         public virtual Branch Branch { get; set; }
 
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<DocumentLog> DocumentLogs { get; set; }
+        public virtual DocumentType DocumentType { get; set; }
 
-        public virtual DocumentType DocumentType { get; set; }        
+        [NotMapped]
+        public string UserName { get; set; }
     }
 }

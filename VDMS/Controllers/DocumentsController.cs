@@ -21,12 +21,17 @@ namespace VDMS.Controllers
         private VDMSModel db = new VDMSModel();
         private static int counter = 0;
         private static string date = DateTime.Today.ToString("ddMMyyy");
+        private IList<ApplicationUser> users = new ApplicationDbContext().Users.ToList();
 
         // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Index()
         {
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
+            foreach (var doc in documents)
+            {
+                doc.UserName = GetUserName(doc.UserID);
+            }
             return View(documents.ToList());
         }
 
@@ -39,6 +44,8 @@ namespace VDMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Document document = db.Documents.Find(id);
+            document.UserID = GetUserName(document.UserID);
+
             if (document == null)
             {
                 return HttpNotFound();
@@ -75,7 +82,7 @@ namespace VDMS.Controllers
             }
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);            
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
 
             return View(document);
         }
@@ -89,6 +96,8 @@ namespace VDMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Document document = db.Documents.Find(id);
+            document.UserID = GetUserName(document.UserID);
+
             if (document == null)
             {
                 return HttpNotFound();
@@ -126,6 +135,8 @@ namespace VDMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Document document = db.Documents.Find(id);
+            document.UserID = GetUserName(document.UserID);
+
             if (document == null)
             {
                 return HttpNotFound();
@@ -145,20 +156,21 @@ namespace VDMS.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Reports()
         {
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            ViewBag.UserID = new SelectList(users, "Id", "Email");
 
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
+            foreach (var doc in documents)
+            {
+                doc.UserName = GetUserName(doc.UserID);
+            }
             return View(documents.ToList());
         }
 
-        // POST: Documents/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
@@ -181,7 +193,7 @@ namespace VDMS.Controllers
                 using (SqlCommand sqlComm = sqlConn.CreateCommand())
                 {
                     sqlComm.CommandType = CommandType.Text;
-                    sqlComm.CommandText = string.Format("SELECT DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,[Description],CreationDate FROM dbo.Documents WHERE {0}",whereClause);
+                    sqlComm.CommandText = string.Format("SELECT DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,[Description],CreationDate FROM dbo.Documents WHERE {0}", whereClause);
 
                     using (SqlDataReader reader = sqlComm.ExecuteReader())
                     {
@@ -202,7 +214,7 @@ namespace VDMS.Controllers
 
                             document.Branch = db.Branches.First(b => b.BranchID == document.BranchID);
                             document.DocumentType = db.DocumentTypes.First(b => b.DocTypeID == document.DocTypeID);
-
+                            document.UserName = GetUserName(document.UserID);
                             documents.Add(document);
                         }
                     }
@@ -211,6 +223,7 @@ namespace VDMS.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            ViewBag.UserID = new SelectList(users, "Id", "Email");
 
             return View(documents);
         }
@@ -230,6 +243,12 @@ namespace VDMS.Controllers
                                  where docTypes.DocTypeID == document.DocTypeID
                                  select docTypes.Serial).FirstOrDefault();
             document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;
+        }
+        private string GetUserName(string userID)
+        {
+            return (from users in users
+                    where users.Id == userID
+                    select users.Email).FirstOrDefault() ?? string.Empty;
         }
     }
 }

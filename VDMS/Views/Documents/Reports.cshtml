@@ -21,14 +21,14 @@
         VDMS.Models.Document document = new VDMS.Models.Document();
     }
     @{
-        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", canSort:false);
         grid.Pager(WebGridPagerModes.NextPrevious);
 
         var gridColumns = new List<WebGridColumn>();
         gridColumns.Add(grid.Column("DocSerial", "DocSerial"));
         gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
         gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
-        gridColumns.Add(grid.Column("UserID", "Created by"));
+        gridColumns.Add(grid.Column("UserName", "Created by"));
         gridColumns.Add(grid.Column("Inbound", "Inbound"));
         gridColumns.Add(grid.Column("Recipient", "Recipient"));
         gridColumns.Add(grid.Column("Description", "Description", style: "description"));
@@ -76,7 +76,7 @@
             <div class="form-group">
                 @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.TextBox("UserID", "", new { @class = "form-control", @Value = User.Identity.Name })
+                    @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.FirstOrDefault().UserID, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -111,6 +111,5 @@
                 selectedRowStyle: "select",
                 columns: grid.Columns(gridColumns.ToArray()))
         </div>
-
     }
 </body>
