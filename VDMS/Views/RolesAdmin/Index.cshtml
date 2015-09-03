@@ -1,25 +1,31 @@
 ﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
 
-@{
-    ViewBag.Title = "Roles";
-}
-
-<h2>Roles</h2>
-
-<body>
     @{
+    ViewBag.Title = "Roles";
+    }
+
+    <h2>Roles</h2>
+
+    <body>
+        @{
         var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
         grid.Pager(WebGridPagerModes.NextPrevious);
 
-        var gridColumns = new List<WebGridColumn>();
-        gridColumns.Add(grid.Column("Name", "Name"));
-    }
+        var gridColumns = new List<WebGridColumn>
+            ();
+            gridColumns.Add(grid.Column("Name", "Name"));
+            if (User.Identity.IsAuthenticated && User.IsInRole("MBB Developer"))
+            {
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));
+            }
+            }
 
-    <div id="gridContent">
-        @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+            <div id="gridContent">
+                @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
                 headerStyle: "header",
                 //alternatingRowStyle: "alt",
                 selectedRowStyle: "select",
                 columns: grid.Columns(gridColumns.ToArray()))
-    </div>
-</body>
+            </div>
+    </body>
