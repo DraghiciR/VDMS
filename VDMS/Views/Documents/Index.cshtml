@@ -1,15 +1,8 @@
 ﻿@model IEnumerable<VDMS.Models.Document>
-<<<<<<< HEAD
 @{
-    ViewBag.Title = "Index";
-}
-<h2>Display documents</h2>
-=======
-    @{
     ViewBag.Title = "Documents";
-    }
-    <h2>Documents</h2>
->>>>>>> 8bb7f687d3aab397fe7e437ee9d9e18b88fe4d0b
+}
+<h2>Documents</h2>
 
 <p>
     @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer") || (User.IsInRole("User")))))
@@ -54,7 +47,7 @@
                 headerStyle: "header",
                 selectedRowStyle: "select",
                 columns: grid.Columns(gridColumns.ToArray()))
-        <br /> 
+        <br />
         @if (grid.HasSelection)
         {
             document = (VDMS.Models.Document)grid.Rows[grid.SelectedIndex].Value;
