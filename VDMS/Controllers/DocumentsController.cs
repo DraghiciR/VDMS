@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Globalization;
 using System.Data.SqlClient;
+using System.Web.Helpers;
 
 namespace VDMS.Controllers
 {
@@ -22,6 +23,7 @@ namespace VDMS.Controllers
         private static int counter = 0;
         private static string date = DateTime.Today.ToString("ddMMyyy");
         private IList<ApplicationUser> users = new ApplicationDbContext().Users.ToList();
+        List<Document> filteredDocuments = null;
 
         // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
@@ -156,6 +158,7 @@ namespace VDMS.Controllers
             return RedirectToAction("Index");
         }
 
+        //GET
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Reports()
         {
@@ -175,7 +178,60 @@ namespace VDMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
         {
-            List<Document> documents = new List<Document>();
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            ViewBag.UserID = new SelectList(users, "Id", "Email");
+
+            return View(FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void ComputeSerialNumber(Document document)
+        {
+            string typeSerial = (from docTypes in db.DocumentTypes
+                                 where docTypes.DocTypeID == document.DocTypeID
+                                 select docTypes.Serial).FirstOrDefault();
+            document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;
+        }
+
+        private string GetUserName(string userID)
+        {
+            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            ApplicationUser user = UserManager.FindById(userID);
+            return user.UserName;
+        }
+
+        public void GetExcel(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        {
+            var grid = new WebGrid(source: FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient), canPage: false, canSort: false);
+            string gridData = grid.GetHtml(columns: grid.Columns(
+                                                    grid.Column("DocSerial", "DocSerial"),
+                                                    grid.Column("Branch.Name", "Branch Name"),
+                                                    grid.Column("DocumentType.Name", "Type"),
+                                                    grid.Column("UserName", "Created by"),
+                                                    grid.Column("Inbound", "Inbound"),
+                                                    grid.Column("Recipient", "Recipient"),
+                                                    grid.Column("Description", "Description"),
+                                                    grid.Column("CreationDate", "Creation Date"))).ToString();
+            Response.ClearContent();
+
+            Response.AddHeader("content-disposition", "attachment; filename = DocumentsReport.xls");
+            Response.ContentType = "application/xls";
+            Response.Write(gridData);
+            Response.End();
+        }
+
+        private List<Document> FilterDocuments(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        {
+            filteredDocuments = new List<Document>();
 
             string whereClause = string.Empty;
             whereClause += string.Format(" creationdate >= '{0}'", startDate ?? DateTime.MinValue);
@@ -217,46 +273,13 @@ namespace VDMS.Controllers
                                 document.Branch = db.Branches.First(b => b.BranchID == document.BranchID);
                                 document.DocumentType = db.DocumentTypes.First(b => b.DocTypeID == document.DocTypeID);
                                 document.UserName = GetUserName(document.UserID);
-                                documents.Add(document);
+                                filteredDocuments.Add(document);
                             }
                         }
-                       
                     }
                 }
             }
-
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
-            ViewBag.UserID = new SelectList(users, "Id", "Email");
-
-            return View(documents);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private void ComputeSerialNumber(Document document)
-        {
-            string typeSerial = (from docTypes in db.DocumentTypes
-                                 where docTypes.DocTypeID == document.DocTypeID
-                                 select docTypes.Serial).FirstOrDefault();
-            document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;
-        }
-        private string GetUserName(string userID)
-        {
-            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            ApplicationUser user =  UserManager.FindById(userID);
-            return user.UserName;
-
-            //return (from users in users
-            //        where users.Id == userID
-            //        select users.Email).FirstOrDefault() ?? string.Empty;
+            return filteredDocuments;
         }
     }
 }
