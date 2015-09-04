@@ -176,7 +176,7 @@ namespace VDMS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
         {
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
@@ -209,7 +209,7 @@ namespace VDMS.Controllers
             return user.UserName;
         }
 
-        public void GetExcel(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        public void GetExcel(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
         {
             var grid = new WebGrid(source: FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient), canPage: false, canSort: false);
             string gridData = grid.GetHtml(columns: grid.Columns(
@@ -229,7 +229,7 @@ namespace VDMS.Controllers
             Response.End();
         }
 
-        private List<Document> FilterDocuments(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, bool inbound, string recipient)
+        private List<Document> FilterDocuments(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
         {
             filteredDocuments = new List<Document>();
 
@@ -240,7 +240,10 @@ namespace VDMS.Controllers
             whereClause += string.Format((branchID.HasValue ? " and branchid = {0}" : string.Empty), branchID);
             whereClause += string.Format((!string.IsNullOrEmpty(userID) ? " and userid = '{0}'" : " and userid is not null"), userID);
             whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient = '{0}'" : " and recipient is not null"), recipient);
-            whereClause += string.Format(" and [inbound] = '{0}'", inbound);
+            if (inbound != "All")
+            {
+                whereClause += string.Format(" and [inbound] = '{0}'", (inbound == "Inbound" ? true : false));
+            }
 
             using (SqlConnection sqlConn = new SqlConnection(ServerSettings.SqlConnectionString))
             {

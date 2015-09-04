@@ -62,10 +62,13 @@
             </div>
 
             <div class="form-group">
+                @Html.Label("Document origin", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="checkbox">
-                    @Html.LabelFor(model => document.Inbound, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-2">
-                        @Html.CheckBox("Inbound", new { @checked = "checked" })
+                    <div class="col-md-3">
+                        @Html.RadioButton("Inbound", "Inbound") Inbound
+                        @Html.RadioButton("Inbound", "Outbound") Outbound
+                        @Html.RadioButton("Inbound", "All") All
+
                         @Html.HiddenFor(model => document.Inbound)
                     </div>
                 </div>
@@ -82,7 +85,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" name="submit" value="Preview" class="btn btn-default" />
                     &nbsp;  &nbsp;
-                    @Html.ActionLink("Export to Excel", "GetExcel", "Documents", new { @inbound = true }, null) @*!!don't delete the null from the ActionLink params*@
+                    @Html.ActionLink("Export to Excel", "GetExcel", "Documents", new { @inbound = "All" }, null) @*!!don't delete the null from the ActionLink params*@
                 </div>
             </div>
             <br /><br />
