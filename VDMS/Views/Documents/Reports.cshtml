@@ -27,44 +27,59 @@
             <hr />
 
             <div class="form-group">
-                @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                <div class="form-group col-md-5">
+                    @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-5">
+                    @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                <div class="form-group col-md-5">
+                    @Html.LabelFor(model => document.DocTypeID, "Doc Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
+                        @Html.HiddenFor(model => document.DocTypeID)
+                    </div>
+                </div>
+                <div class="form-group col-md-5">
+                    @Html.LabelFor(model => document.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
+                        @Html.HiddenFor(model => document.BranchID)
+                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => document.DocTypeID, "DocTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
-                    @Html.HiddenFor(model => document.DocTypeID)
+                <div class="form-group col-md-5">
+                    @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => document.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
-                    @Html.HiddenFor(model => document.BranchID)
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control" })
+
+                <div class="form-group col-md-5">
+                    @Html.LabelFor(model => document.Recipient, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => document.Recipient, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => document.Recipient, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.Label("Document origin", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="checkbox">
-                    <div class="col-md-3">
+                <div class="form-group col-md-5">
+                    @Html.Label("Origin", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
                         @Html.RadioButton("Inbound", "Inbound") Inbound
                         @Html.RadioButton("Inbound", "Outbound") Outbound
                         @Html.RadioButton("Inbound", "All") All
@@ -72,22 +87,14 @@
                         @Html.HiddenFor(model => document.Inbound)
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => document.Recipient, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => document.Recipient, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => document.Recipient, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="form-group col-md-5">
                     <input type="submit" name="submit" value="Preview" class="btn btn-default" />
                     &nbsp;  &nbsp;
                     @Html.ActionLink("Export to Excel", "GetExcel", "Documents", new { @inbound = "All" }, null) @*!!don't delete the null from the ActionLink params*@
                 </div>
             </div>
+
             <br /><br />
             <div id="gridContent">
                 @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
