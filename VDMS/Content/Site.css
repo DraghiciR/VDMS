@@ -111,9 +111,10 @@ li#vdf-home:hover {
 }
 
 
-table a {
-	color:#fff;
+table th a  {
+	color: #fff;
 }
+
 table >tbody> tr > td > a {
 	color: #9c2aa0;
 }
