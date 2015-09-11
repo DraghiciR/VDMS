@@ -3,7 +3,7 @@
     ViewBag.Title = "Reports";
 
     VDMS.Models.Document document = new VDMS.Models.Document();
-    var grid = new WebGrid(source: Model, canPage: false, canSort: false);
+    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, canSort: false);
 }
 
 <h2>Reports</h2>

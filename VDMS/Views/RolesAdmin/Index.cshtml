@@ -6,6 +6,13 @@
 
     <h2>Roles</h2>
 
+<p>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("MBB Developer"))
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
+</p>
+
     <body>
         @{
         var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
