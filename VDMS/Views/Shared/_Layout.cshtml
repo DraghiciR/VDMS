@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - VOID</title>
 
-   
+
     <link href="~/Content/bootstrap.css" type="text/css" rel="stylesheet" />
     <link href="~/Content/Site.css" type="text/css" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
 
     <!-- jQuery UI CSS Reference -->
-  @*  <link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" />*@
+    @*  <link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" />*@
     <link href="@Url.Content("~/Content/themes/base/all.css")" rel="stylesheet" />
     <!-- Required jQuery and jQuery UI Javascript references -->
     <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
@@ -40,8 +40,10 @@
                 <ul class="nav navbar-nav">
 
                     <li id="vdf-home">@Html.ActionLink(" ", "Index", "Documents")</li>
-                    <li>@Html.ActionLink("Report", "Reports", "Documents")</li>
-
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Report", "Reports", "Documents")</li>
+                    }
                     @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer"))))
                     {
                         <li>@Html.ActionLink("User Management", "Index", "UsersAdmin")</li>

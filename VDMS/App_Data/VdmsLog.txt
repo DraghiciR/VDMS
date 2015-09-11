@@ -90,3 +90,45 @@ Stack Trace:
    at System.Data.Entity.DbContext.SaveChanges()
    at VDMS.Models.Helpers.OperationLogger.LogDocumentEvent(String IDuser, Int32 IDdoc, String typeOperation) in C:\Users\TabacariM\Documents\Vodafone Projects\VodafoneDocumentTrackingSystem\VDMS\Models\Helpers\OperationLogger.cs:line 47
 
+********** 9/9/2015 1:53:59 PM **********
+Exception Type: System.FormatException
+Exception: The specified string is not in the form required for an e-mail address.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.MailAddressParser.ReadCfwsAndThrowIfIncomplete(String data, Int32 index)
+   at System.Net.Mail.MailAddressParser.ParseDomain(String data, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data, Boolean expectMultipleAddresses, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data)
+   at System.Net.Mail.MailAddress..ctor(String address, String displayName, Encoding displayNameEncoding)
+   at System.Net.Mail.Message..ctor(String from, String to)
+   at System.Net.Mail.MailMessage..ctor(String from, String to)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VOID\VDMS\App_Start\IdentityConfig.cs:line 45
+
+********** 9/9/2015 2:04:20 PM **********
+Exception Type: System.FormatException
+Exception: The specified string is not in the form required for an e-mail address.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.MailAddressParser.ReadCfwsAndThrowIfIncomplete(String data, Int32 index)
+   at System.Net.Mail.MailAddressParser.ParseDomain(String data, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data, Boolean expectMultipleAddresses, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data)
+   at System.Net.Mail.MailAddress..ctor(String address, String displayName, Encoding displayNameEncoding)
+   at System.Net.Mail.Message..ctor(String from, String to)
+   at System.Net.Mail.MailMessage..ctor(String from, String to)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VOID\VDMS\App_Start\IdentityConfig.cs:line 45
+
+********** 9/10/2015 10:55:17 AM **********
+Exception Type: System.FormatException
+Exception: The specified string is not in the form required for an e-mail address.
+Source: SendEmail
+Stack Trace: 
+   at System.Net.Mail.MailAddressParser.ReadCfwsAndThrowIfIncomplete(String data, Int32 index)
+   at System.Net.Mail.MailAddressParser.ParseDomain(String data, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data, Boolean expectMultipleAddresses, Int32& index)
+   at System.Net.Mail.MailAddressParser.ParseAddress(String data)
+   at System.Net.Mail.MailAddress..ctor(String address, String displayName, Encoding displayNameEncoding)
+   at System.Net.Mail.Message..ctor(String from, String to)
+   at System.Net.Mail.MailMessage..ctor(String from, String to)
+   at VDMS.EmailService.SendAsync(IdentityMessage message) in C:\Users\DraghiciR\Documents\Internal Projects\VOID\VDMS\App_Start\IdentityConfig.cs:line 45
+

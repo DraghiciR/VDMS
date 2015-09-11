@@ -49,9 +49,7 @@ namespace VDMS
                 mail.Body = message.Body;
 
                 //Send:
-                //Wainting for smtp credentials
-                //return client.SendMailAsync(mail);
-                return Task.FromResult(0);
+                return client.SendMailAsync(mail);
             }
             catch (Exception ex)
             {

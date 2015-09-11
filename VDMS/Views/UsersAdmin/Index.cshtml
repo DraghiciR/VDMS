@@ -12,7 +12,7 @@
 
 <body>
     @{
-        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", defaultSort: "Email");
         grid.Pager(WebGridPagerModes.NextPrevious);
 
         var gridColumns = new List<WebGridColumn>();
@@ -31,7 +31,6 @@
     <div id="gridContent">
         @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
                 headerStyle: "header",
-                //alternatingRowStyle: "alt",
                 selectedRowStyle: "select",
                 columns: grid.Columns(gridColumns.ToArray()))
     </div>

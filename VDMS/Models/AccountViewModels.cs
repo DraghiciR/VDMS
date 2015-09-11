@@ -65,7 +65,7 @@ namespace VDMS.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@vodafone\.com)$", ErrorMessage = "Only valid Vodafone email address allowed!")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
