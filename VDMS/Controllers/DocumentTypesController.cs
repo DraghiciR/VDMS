@@ -79,11 +79,17 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DocTypeID,Name,Serial")] DocumentType documentType)
+        public ActionResult Edit([Bind(Include = "DocTypeID,Name,Serial,Disabled")] DocumentType documentType)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(documentType).State = EntityState.Modified;
+
+                if (documentType.Disabled == true)
+                    documentType.DisabledDate = DateTime.Now;
+                else
+                    documentType.DisabledDate = null;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -18,13 +18,14 @@
         var gridColumns = new List<WebGridColumn>();
         gridColumns.Add(grid.Column("Name", "Name"));
         gridColumns.Add(grid.Column("Serial", "Serial"));
+        gridColumns.Add(grid.Column("Disabled", "Disabled"));
         gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
         {
             id = item.DocTypeID
         })));
         if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
-            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocTypeID })));
+            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocTypeID })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocTypeID })));
         }
     }
