@@ -14,9 +14,10 @@
     @{
         var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
         grid.Pager(WebGridPagerModes.NextPrevious);
-
+        //grid.Column("Name", string.Format("Name {0}", grid.SortColumn == "Name" ? grid.SortDirection == SortDirection.Ascending ? "▼" : "▲" : "")
         var gridColumns = new List<WebGridColumn>();
         gridColumns.Add(grid.Column("Name", "Name"));
+        //gridColumns.Add(grid.Column("Name", string.Format("Name {0}", grid.SortColumn == "Name" ? grid.SortDirection == SortDirection.Ascending ? "▼" : "▲" : "")));
         gridColumns.Add(grid.Column("Address", "Address"));
         gridColumns.Add(grid.Column("Disabled", "Disabled"));
         gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new

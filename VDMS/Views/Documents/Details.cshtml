@@ -77,6 +77,10 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DocID }) |
+    @if ((ViewContext.HttpContext.User.IsInRole("Admin")) || (ViewContext.HttpContext.User.IsInRole("MBB Developer")))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.DocID }) 
+    }
+     |
     @Html.ActionLink("Back to List", "Index")
 </p>
