@@ -60,8 +60,8 @@ namespace VDMS.Controllers
         [Authorize(Roles = "User,Admin,MBB Developer")]
         public ActionResult Create()
         {
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
             return View();
         }
 
@@ -83,8 +83,8 @@ namespace VDMS.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
 
             return View(document);
         }
@@ -104,8 +104,8 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
             return View(document);
         }
 
@@ -123,8 +123,8 @@ namespace VDMS.Controllers
                 OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
                 return RedirectToAction("Index");
             }
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
             return View(document);
         }
 
@@ -176,13 +176,23 @@ namespace VDMS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
+        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
         {
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
+            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
             ViewBag.UserID = new SelectList(users, "Id", "Email");
 
-            return View(FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient));
+            filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
+
+            if (submit == "Export")
+            {
+                string exportContent = GetExcel();
+                return File(new System.Text.UTF8Encoding().GetBytes(exportContent), "application/xls", "DocumentsReport.xls");
+            }
+            else
+            {
+                return View(filteredDocuments);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -209,9 +219,9 @@ namespace VDMS.Controllers
             return user.UserName;
         }
 
-        public void GetExcel(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
+        public string GetExcel()
         {
-            var grid = new WebGrid(source: FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient), canPage: false, canSort: false);
+            var grid = new WebGrid(source: filteredDocuments, canPage: false, canSort: false);
             string gridData = grid.GetHtml(columns: grid.Columns(
                                                     grid.Column("DocSerial", "DocSerial"),
                                                     grid.Column("Branch.Name", "Branch Name"),
@@ -221,12 +231,8 @@ namespace VDMS.Controllers
                                                     grid.Column("Recipient", "Recipient"),
                                                     grid.Column("Description", "Description"),
                                                     grid.Column("CreationDate", "Creation Date"))).ToString();
-            Response.ClearContent();
-
-            Response.AddHeader("content-disposition", "attachment; filename = DocumentsReport.xls");
-            Response.ContentType = "application/xls";
-            Response.Write(gridData);
-            Response.End();
+            
+            return gridData;
         }
 
         private List<Document> FilterDocuments(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
@@ -240,7 +246,7 @@ namespace VDMS.Controllers
             whereClause += string.Format((branchID.HasValue ? " and branchid = {0}" : string.Empty), branchID);
             whereClause += string.Format((!string.IsNullOrEmpty(userID) ? " and userid = '{0}'" : " and userid is not null"), userID);
             whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient = '{0}'" : " and recipient is not null"), recipient);
-            if (inbound != "All")
+            if (inbound != "All" && inbound != null)
             {
                 whereClause += string.Format(" and [inbound] = '{0}'", (inbound == "Inbound" ? true : false));
             }
