@@ -74,12 +74,13 @@ namespace VDMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "User,Admin,MBB Developer")]
-        public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
+        public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description")] Document document)
         {
             ComputeSerialNumber(document);
             if (ModelState.IsValid)
             {
                 document.UserID = User.Identity.GetUserId();
+                document.CreationDate = DateTime.Now;
                 db.Documents.Add(document);
                 db.SaveChanges();
                 OperationLogger.LogDocumentEvent(document.UserID, document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
@@ -188,8 +189,8 @@ namespace VDMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
         {
-            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
+            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
             ViewBag.UserID = new SelectList(users, "Id", "Email");
 
             filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
