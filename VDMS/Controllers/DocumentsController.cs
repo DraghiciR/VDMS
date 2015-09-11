@@ -20,8 +20,6 @@ namespace VDMS.Controllers
     public class DocumentsController : Controller
     {
         private VDMSModel db = new VDMSModel();
-        private static int counter = 0;
-        private static string date = DateTime.Today.ToString("ddMMyyy");
         private IList<ApplicationUser> users = new ApplicationDbContext().Users.ToList();
         List<Document> filteredDocuments = null;
 
@@ -217,10 +215,13 @@ namespace VDMS.Controllers
 
         private void ComputeSerialNumber(Document document)
         {
-            string typeSerial = (from docTypes in db.DocumentTypes
-                                 where docTypes.DocTypeID == document.DocTypeID
-                                 select docTypes.Serial).FirstOrDefault();
-            document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}", ++counter), date) ?? string.Empty;
+            var typeSerial = (from docTypes in db.DocumentTypes
+                              where docTypes.DocTypeID == document.DocTypeID
+                              select docTypes.Serial).FirstOrDefault();
+
+            document.DocSerial = ViewBag.DocSerial = string.Concat(typeSerial, String.Format("{0:D5}",
+                                                                                                db.Documents.Count(d => d.DocTypeID == document.DocTypeID && d.CreationDate >= DateTime.Today) + 1),
+                                                                                                DateTime.Today.ToString("ddMMyyy")) ?? string.Empty;
         }
 
         private string GetUserName(string userID)
