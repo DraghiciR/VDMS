@@ -22,7 +22,7 @@ namespace VDMS.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +34,9 @@ namespace VDMS.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -92,7 +92,7 @@ namespace VDMS.Controllers
                 case SignInStatus.Success:
                     // Update LastLogin Date and Time
                     var u = await UserManager.FindByNameAsync(model.Email);
-                    u.LastLogin = DateTime.Now;               
+                    u.LastLogin = DateTime.Now;
                     UserManager.Update(u);
                     return RedirectToAction("Index", "Documents"); //RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -135,7 +135,7 @@ namespace VDMS.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -173,7 +173,7 @@ namespace VDMS.Controllers
                     var currentUser = UserManager.FindByName(user.UserName);
                     var roleresult = UserManager.AddToRole(currentUser.Id, "Viewer");
 
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -186,17 +186,22 @@ namespace VDMS.Controllers
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account",
                        new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account",
-                       "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    try
+                    {
+                        await UserManager.SendEmailAsync(user.Id, "Confirm your account",
+                           "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                        ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
+                                    + "before you can log in.";
+                    }
+                    catch
+                    {
+                        ViewBag.Message = "Error sending email! Contact HelpDesk for further support!";
+                    }
 
                     // Uncomment to debug locally 
                     // TempData["ViewBagLink"] = callbackUrl;
-
-                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
-                                    + "before you can log in.";
-
                     return View("Info");
-                   
+
                 }
                 AddErrors(result);
             }

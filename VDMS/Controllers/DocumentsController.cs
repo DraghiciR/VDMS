@@ -57,11 +57,16 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Create
-        [Authorize(Roles = "User,Admin,MBB Developer")]
         public ActionResult Create()
         {
+            if (Request.IsAuthenticated && (User.IsInRole("Viewer") || User.IsInRole("HelpDesk")))
+            {
+                return Redirect("~/Error/Denied");
+            }
+
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
+
             return View();
         }
 
@@ -70,6 +75,7 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User,Admin,MBB Developer")]
         public ActionResult Create([Bind(Include = "DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
         {
             ComputeSerialNumber(document);
@@ -90,9 +96,13 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Edit/5
-        [Authorize(Roles = "Admin,MBB Developer")]
         public ActionResult Edit(int? id)
         {
+            if (Request.IsAuthenticated && (User.IsInRole("Viewer") || User.IsInRole("HelpDesk") || (User.IsInRole("User"))))
+            {
+                return Redirect("~/Error/Denied");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -114,6 +124,7 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,MBB Developer")]
         public ActionResult Edit([Bind(Include = "DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
         {
             if (ModelState.IsValid)
@@ -121,7 +132,7 @@ namespace VDMS.Controllers
                 db.Entry(document).State = EntityState.Modified;
                 db.SaveChanges();
                 OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Documents");
             }
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
@@ -219,7 +230,7 @@ namespace VDMS.Controllers
             return user.UserName;
         }
 
-        public string GetExcel()
+        private string GetExcel()
         {
             var grid = new WebGrid(source: filteredDocuments, canPage: false, canSort: false);
             string gridData = grid.GetHtml(columns: grid.Columns(
@@ -231,7 +242,7 @@ namespace VDMS.Controllers
                                                     grid.Column("Recipient", "Recipient"),
                                                     grid.Column("Description", "Description"),
                                                     grid.Column("CreationDate", "Creation Date"))).ToString();
-            
+
             return gridData;
         }
 
@@ -245,7 +256,7 @@ namespace VDMS.Controllers
             whereClause += string.Format((docTypeID.HasValue ? " and doctypeid = {0}" : string.Empty), docTypeID);
             whereClause += string.Format((branchID.HasValue ? " and branchid = {0}" : string.Empty), branchID);
             whereClause += string.Format((!string.IsNullOrEmpty(userID) ? " and userid = '{0}'" : " and userid is not null"), userID);
-            whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient = '{0}'" : " and recipient is not null"), recipient);
+            whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and lower(recipient) LIKE lower('%{0}%')" : " and recipient is not null"), recipient);
             if (inbound != "All" && inbound != null)
             {
                 whereClause += string.Format(" and [inbound] = '{0}'", (inbound == "Inbound" ? true : false));
