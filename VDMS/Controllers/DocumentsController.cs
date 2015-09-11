@@ -79,11 +79,10 @@ namespace VDMS.Controllers
             ComputeSerialNumber(document);
             if (ModelState.IsValid)
             {
-                string currUserID = User.Identity.GetUserId();
-                document.UserID = currUserID;
+                document.UserID = User.Identity.GetUserId();
                 db.Documents.Add(document);
                 db.SaveChanges();
-                OperationLogger.LogDocumentEvent(currUserID, document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
+                OperationLogger.LogDocumentEvent(document.UserID, document.DocID, OperationLogger.GetEnumDescription(OperationType.Create));
                 return RedirectToAction("Index");
             }
 
@@ -107,6 +106,7 @@ namespace VDMS.Controllers
             }
             Document document = db.Documents.Find(id);
             document.UserID = GetUserName(document.UserID);
+            
 
             if (document == null)
             {
@@ -127,6 +127,7 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                document.UserID = User.Identity.GetUserId();
                 db.Entry(document).State = EntityState.Modified;
                 db.SaveChanges();
                 OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
@@ -138,7 +139,7 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Delete/5
-        [Authorize(Roles = "MBB Developer")]
+        [Authorize(Roles = "Admin,MBB Developer")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
