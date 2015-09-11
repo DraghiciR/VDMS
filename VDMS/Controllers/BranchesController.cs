@@ -79,11 +79,17 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "BranchID,Name,Address")] Branch branch)
+        public ActionResult Edit([Bind(Include = "BranchID,Name,Address,Disabled")] Branch branch)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(branch).State = EntityState.Modified;
+
+                if (branch.Disabled == true)
+                    branch.DisabledDate = DateTime.Now;
+                else
+                    branch.DisabledDate = null;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

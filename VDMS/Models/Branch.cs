@@ -26,6 +26,12 @@ namespace VDMS.Models
         [Display(Name = "Branch Address")]
         public string Address { get; set; }
 
+        [Display(Name = "Disabled")]
+        public bool Disabled { get; set; }
+
+        [Display(Name = "Disable Date")]
+        public DateTime? DisabledDate { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }
     }
