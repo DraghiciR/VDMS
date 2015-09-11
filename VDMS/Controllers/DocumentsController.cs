@@ -64,6 +64,7 @@ namespace VDMS.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
 
             return View();
         }
@@ -89,6 +90,7 @@ namespace VDMS.Controllers
 
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
 
             return View(document);
         }
@@ -115,6 +117,8 @@ namespace VDMS.Controllers
             }
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+
             return View(document);
         }
 
@@ -136,6 +140,8 @@ namespace VDMS.Controllers
             }
             ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+
             return View(document);
         }
 
@@ -176,6 +182,7 @@ namespace VDMS.Controllers
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
             ViewBag.UserID = new SelectList(users, "Id", "Email");
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
 
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
             foreach (var doc in documents)
@@ -192,6 +199,7 @@ namespace VDMS.Controllers
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
             ViewBag.UserID = new SelectList(users, "Id", "Email");
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
 
             filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
 
