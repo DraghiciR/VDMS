@@ -245,7 +245,7 @@ namespace VDMS.Controllers
             whereClause += string.Format((docTypeID.HasValue ? " and doctypeid = {0}" : string.Empty), docTypeID);
             whereClause += string.Format((branchID.HasValue ? " and branchid = {0}" : string.Empty), branchID);
             whereClause += string.Format((!string.IsNullOrEmpty(userID) ? " and userid = '{0}'" : " and userid is not null"), userID);
-            whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient = '{0}'" : " and recipient is not null"), recipient);
+            whereClause += string.Format((!string.IsNullOrEmpty(recipient) ? " and recipient like '%{0}%'" : " and recipient is not null"), recipient);
             if (inbound != "All" && inbound != null)
             {
                 whereClause += string.Format(" and [inbound] = '{0}'", (inbound == "Inbound" ? true : false));
