@@ -18,6 +18,7 @@
 	
 }
 .vdf-brand-text{
+	text-decoration: none;
 	display: block;
     color: #E60000;
     font-size: 25px;
@@ -94,8 +95,7 @@ input, select, textarea{
     background: url(../vdf-home.png);
     background-position-x: 4px;
     background-position-y: -2px;
-    background-repeat-x: no-repeat;
-    background-repeat-y: no-repeat;
+    background-repeat: no-repeat;
     background-attachment: initial;
     background-origin: initial;
     background-size: 48px 51px;
@@ -106,8 +106,8 @@ li#vdf-home:hover {
 
 }
 #vdf-home a {
-	width: 40px;
-	height: 40px;
+	width: 59px;
+    height: 51px;
 }
 
 
@@ -184,7 +184,7 @@ tr:nth-of-type(even) {
      }
 
      #vdf-home a{
-     	
+     	height: 46px;
      	width: 100%;
      }
     }
