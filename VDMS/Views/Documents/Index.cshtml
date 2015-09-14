@@ -27,7 +27,10 @@
         gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
         gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
         gridColumns.Add(grid.Column("UserName", "Created by"));
-        gridColumns.Add(grid.Column("Inbound", "Inbound"));
+        gridColumns.Add(grid.Column("Inbound", "Inbound",
+     format:@<text><input class="check-box" id="inboundChkBx" name="inboundChkBx" type="checkbox" value="@item.Inbound" disabled
+                          @(item.Inbound == false ? null : "checked") /></text>
+        ));
         gridColumns.Add(grid.Column("Recipient", "Recipient"));
         gridColumns.Add(grid.Column("Description", "Description", style: "description"));
         gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("d")));
