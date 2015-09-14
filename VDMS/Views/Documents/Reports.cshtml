@@ -3,7 +3,29 @@
     ViewBag.Title = "Reports";
 
     VDMS.Models.Document document = new VDMS.Models.Document();
-    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, canSort: false);
+    //var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, canSort: false);
+
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+    grid.Pager(WebGridPagerModes.NextPrevious);
+
+    var gridColumns = new List<WebGridColumn>();
+    gridColumns.Add(grid.Column("DocSerial", format: (item) => item.GetSelectLink(item.DocSerial)));
+    gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
+    gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
+    gridColumns.Add(grid.Column("UserName", "Created by"));
+    gridColumns.Add(grid.Column("Inbound", "Inbound"));
+    gridColumns.Add(grid.Column("Recipient", "Recipient"));
+    gridColumns.Add(grid.Column("Description", "Description", style: "description"));
+    gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("d")));
+    gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
+    {
+        id = item.DocID
+    })));
+    if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+    {
+        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocID })));
+        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocID })));
+    }
 }
 
 <h2>Documents</h2>
@@ -249,17 +271,10 @@
                 @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
                  headerStyle: "header",
                  selectedRowStyle: "select",
-                 columns: grid.Columns(
-                         grid.Column("DocSerial", "DocSerial"),
-                         grid.Column("Branch.Name", "Branch Name"),
-                         grid.Column("DocumentType.Name", "Type"),
-                         grid.Column("UserName", "Created by"),
-                         grid.Column("Inbound", "Inbound"),
-                         grid.Column("Recipient", "Recipient"),
-                         grid.Column("Description", "Description"),
-                         grid.Column("CreationDate", "Creation Date")))
+                 columns: grid.Columns(gridColumns.ToArray()))
+
             </div>
 
         </div>
-    }
+                }
 </body>
