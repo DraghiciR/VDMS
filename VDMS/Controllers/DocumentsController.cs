@@ -179,9 +179,9 @@ namespace VDMS.Controllers
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Reports()
         {
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
-            ViewBag.UserID = new SelectList(users, "Id", "Email");
+            ViewBag.BranchID = new SelectList(db.Branches.OrderBy(d => d.Name), "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.OrderBy(d=>d.Name), "DocTypeID", "Name");
+            ViewBag.UserID = new SelectList(users.OrderBy(d => d.Email), "Id", "Email");
             ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
 
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
@@ -196,6 +196,7 @@ namespace VDMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
         {
+
             ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
             ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
             ViewBag.UserID = new SelectList(users, "Id", "Email");
