@@ -10,13 +10,13 @@ namespace VDMS.Controllers
     {
         public ActionResult Index()
         {
-            if (Request.IsAuthenticated)
+            if (!Request.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Documents");
+                return RedirectToAction("Login", "Account");
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return View();
             }
         }
 

@@ -23,7 +23,7 @@
 <body>
     <div class="container vdf-header-container">
         <img src="~/logo.png" class="img-responsive vdf-logo" />
-        <a href="@Url.Action("Index", "Documents")"><span class="vdf-brand-text">Vodafone Outbound Inbound Docs</span></a>
+        <a href="@Url.Action("Index", "Home")"><span class="vdf-brand-text">Vodafone Outbound Inbound Docs</span></a>
     </div>
 
     <div class="navbar navbar-inverse ">
@@ -39,10 +39,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
 
-                    <li id="vdf-home">@Html.ActionLink(" ", "Index", "Documents")</li>
+                    <li id="vdf-home">@Html.ActionLink(" ", "Index", "Home")</li>
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Report", "Reports", "Documents")</li>
+                        <li>@Html.ActionLink("Documents", "Reports", "Documents")</li>
                     }
                     @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer"))))
                     {
