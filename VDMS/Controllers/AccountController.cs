@@ -94,7 +94,7 @@ namespace VDMS.Controllers
                     var u = await UserManager.FindByNameAsync(model.Email);
                     u.LastLogin = DateTime.Now;
                     UserManager.Update(u);
-                    return RedirectToAction("Index", "Documents"); //RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Home"); //RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
