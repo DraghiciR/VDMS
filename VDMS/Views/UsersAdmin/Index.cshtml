@@ -17,6 +17,10 @@
 
         var gridColumns = new List<WebGridColumn>();
         gridColumns.Add(grid.Column("Email", "Email"));
+        gridColumns.Add(grid.Column("Disabled", "Disabled",
+    format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" type="checkbox" value="@item.Disabled" disabled
+                         @(item.Disabled == false ? null : "checked") /></text>
+        ));
         gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
         {
             id = item.Id
@@ -24,7 +28,7 @@
         if (User.Identity.IsAuthenticated && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer"))))
         {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));
-            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink((@item.Disabled ? "Enable" : "Disable"), "Delete", new { id = item.Id })));
         }
     }
 

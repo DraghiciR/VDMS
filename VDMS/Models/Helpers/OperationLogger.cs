@@ -16,7 +16,11 @@ namespace VDMS.Models.Helpers
         [Description("View")]
         View,
         [Description("Delete")]
-        Delete
+        Delete,
+        [Description("Enable")]
+        Enable,
+        [Description("Disable")]
+        Disable
     }
     
     public class OperationLogger

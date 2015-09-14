@@ -15,7 +15,7 @@ using System.Web.Mvc;
 using VDMS.Models.Helpers;
 
 namespace VDMS.Controllers
-{   
+{
     [Authorize(Roles = "HelpDesk, MBB Developer")]
     public class UsersAdminController : Controller
     {
@@ -33,7 +33,7 @@ namespace VDMS.Controllers
             RoleManager = roleManager;
         }
 
-        
+
         public ApplicationUserManager UserManager
         {
             get
@@ -46,7 +46,7 @@ namespace VDMS.Controllers
             }
         }
 
-       
+
         public ApplicationRoleManager RoleManager
         {
             get
@@ -94,7 +94,7 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser(){ UserName = userViewModel.Email, Email = userViewModel.Email };
+                var user = new ApplicationUser() { UserName = userViewModel.Email, Email = userViewModel.Email, Disabled = false };
 
                 // Then create:
                 var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
@@ -102,14 +102,14 @@ namespace VDMS.Controllers
                 //Add User to the selected Roles 
                 if (adminresult.Succeeded)
                 {
-                    
+
                     if (selectedRoles != null)
                     {
                         var result = await UserManager.AddToRolesAsync(user.Id, selectedRoles);
                         if (!result.Succeeded)
                         {
                             ModelState.AddModelError("", result.Errors.First());
-                            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");                            
+                            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
                             return View();
                         }
                         else
@@ -150,6 +150,7 @@ namespace VDMS.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
+                Disabled = user.Disabled,
                 RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
                 {
                     Selected = userRoles.Contains(x.Name),
@@ -165,7 +166,7 @@ namespace VDMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Email,EmailConfirmed")] EditUserViewModel editUser, params string[] selectedRole)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Email,EmailConfirmed,Disabled")] EditUserViewModel editUser, params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {
@@ -177,14 +178,15 @@ namespace VDMS.Controllers
 
                 user.UserName = editUser.Email;
                 user.Email = editUser.Email;
-                user.EmailConfirmed = editUser.EmailConfirmed;           
+                user.EmailConfirmed = editUser.EmailConfirmed;
+                user.Disabled = editUser.Disabled;
 
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
 
                 selectedRole = selectedRole ?? new string[] { };
 
                 var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
-                
+
 
                 if (!result.Succeeded)
                 {
@@ -240,7 +242,10 @@ namespace VDMS.Controllers
                 {
                     return HttpNotFound();
                 }
-                var result = await UserManager.DeleteAsync(user);
+
+                user.Disabled = !user.Disabled;
+
+                var result = await UserManager.UpdateAsync(user);
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First());
@@ -248,8 +253,16 @@ namespace VDMS.Controllers
                 }
                 else
                 {
-                    OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Delete));
+                    if (user.Disabled)
+                    {
+                        OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Disable));
+                    }
+                    else
+                    {
+                        OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Enable));
+                    }
                 }
+
                 return RedirectToAction("Index");
             }
             return View();

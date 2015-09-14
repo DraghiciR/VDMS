@@ -10,6 +10,7 @@ namespace VDMS.Models
     public class ApplicationUser : IdentityUser
     {
         public DateTime LastLogin { get; set; }
+        public bool Disabled { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

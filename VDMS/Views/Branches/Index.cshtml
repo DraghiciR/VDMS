@@ -21,7 +21,7 @@
         gridColumns.Add(grid.Column("Address", "Address"));
         gridColumns.Add(grid.Column("Disabled", "Disabled",
     format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" type="checkbox" value="@item.Disabled" disabled
-    @(item.Disabled == false ? null : "checked") /></text>
+                         @(item.Disabled == false ? null : "checked") /></text>
         ));
         gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
         {

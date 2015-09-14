@@ -82,6 +82,12 @@ namespace VDMS.Controllers
                     ViewBag.errorMessage = "You must have a confirmed email to log on.";
                     return View("Error");
                 }
+
+                if (user.Disabled)
+                {
+                    ViewBag.errorMessage = "Your user must be enabled to log on.";
+                    return View("Error");
+                }
             }
 
             // This doesn't count login failures towards account lockout
@@ -166,7 +172,7 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Disabled = false };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

@@ -15,16 +15,17 @@ namespace VDMS.Models
         public string Name { get; set; }
     }
     public class EditUserViewModel
-        {
-            public string Id { get; set; }
+    {
+        public string Id { get; set; }
 
-            [Required(AllowEmptyStrings = false)]
-            [Display(Name = "Email")]
-            [EmailAddress]
-            public string Email { get; set; }
-            public bool EmailConfirmed { get; set; }            
+        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public bool Disabled { get; set; }
 
-            public IEnumerable<SelectListItem> RolesList { get; set; }
-        }
-    
+        public IEnumerable<SelectListItem> RolesList { get; set; }
+    }
+
 }

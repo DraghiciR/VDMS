@@ -16,6 +16,12 @@
         <dd>
             @Html.DisplayFor(model => model.UserName)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Disabled)
+        </dt>
+        <dd>
+            @Html.CheckBoxFor(model => model.Disabled, new { disabled = "disabled" })
+        </dd>
     </dl>
 </div>
 <h4>List of roles for this user</h4>
