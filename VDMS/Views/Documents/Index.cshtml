@@ -8,8 +8,8 @@
     grid.Pager(WebGridPagerModes.NextPrevious);
 
     var gridColumns = new List<WebGridColumn>();
-    gridColumns.Add(grid.Column("DocSerial", format: (item) => item.GetSelectLink(item.DocSerial)));
-    gridColumns.Add(grid.Column("Branch.Name", "Branch Name"));
+    gridColumns.Add(grid.Column("Serial", format: (item) => item.GetSelectLink(item.DocSerial)));
+    gridColumns.Add(grid.Column("Branch.Name", "Branch"));
     gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
     gridColumns.Add(grid.Column("UserName", "Created by"));
     gridColumns.Add(grid.Column("Inbound", "Inbound", 
@@ -214,14 +214,14 @@
 
             <div class="form-group">
                 <div class="form-group col-md-5">
-                    @Html.LabelFor(model => document.DocTypeID, "Doc Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => document.DocTypeID, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
                         @Html.HiddenFor(model => document.DocTypeID)
                     </div>
                 </div>
                 <div class="form-group col-md-5">
-                    @Html.LabelFor(model => document.BranchID, "BranchID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => document.BranchID, "Branch", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
                         @Html.HiddenFor(model => document.BranchID)
