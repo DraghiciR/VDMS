@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VDMS.Models;
+using System.Text.RegularExpressions;
 
 namespace VDMS.Controllers
 {
@@ -483,7 +484,10 @@ namespace VDMS.Controllers
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                if (!error.StartsWith("Name"))
+                {
+                    ModelState.AddModelError("", error);
+                }
             }
         }
 
