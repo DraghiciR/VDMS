@@ -21,18 +21,38 @@ namespace VDMS.Controllers
     {
         private VDMSModel db = new VDMSModel();
         private IList<ApplicationUser> users = new ApplicationDbContext().Users.ToList();
-        List<Document> filteredDocuments = null;
 
         // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
         public ActionResult Index()
         {
+            PopulateViewBag();
+
             var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
             foreach (var doc in documents)
             {
                 doc.UserName = GetUserName(doc.UserID);
             }
             return View(documents.ToList());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
+        {
+            PopulateViewBag();
+
+            List<Document> filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
+
+            if (submit == "Export")
+            {
+                string exportContent = GetExcel(filteredDocuments);
+                return File(new System.Text.UTF8Encoding().GetBytes(exportContent), "application/xls", "DocumentsReport.xls");
+            }
+            else
+            {
+                return View(filteredDocuments);
+            }
         }
 
         // GET: Documents/Details/5
@@ -62,9 +82,7 @@ namespace VDMS.Controllers
                 return Redirect("~/Error/Denied");
             }
 
-            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name");
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+            PopulateViewBag();
 
             return View();
         }
@@ -88,9 +106,7 @@ namespace VDMS.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+            PopulateViewBag();
 
             return View(document);
         }
@@ -115,9 +131,8 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+
+            PopulateViewBag();
 
             return View(document);
         }
@@ -138,9 +153,8 @@ namespace VDMS.Controllers
                 OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
                 return RedirectToAction("Index", "Documents");
             }
-            ViewBag.BranchID = new SelectList(db.Branches.Where(b => !b.Disabled), "BranchID", "Name", document.BranchID);
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled), "DocTypeID", "Name", document.DocTypeID);
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
+
+            PopulateViewBag();
 
             return View(document);
         }
@@ -175,46 +189,6 @@ namespace VDMS.Controllers
             return RedirectToAction("Index");
         }
 
-        //GET
-        [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
-        public ActionResult Reports()
-        {
-            ViewBag.BranchID = new SelectList(db.Branches.OrderBy(d => d.Name), "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.OrderBy(d=>d.Name), "DocTypeID", "Name");
-            ViewBag.UserID = new SelectList(users.OrderBy(d => d.Email), "Id", "Email");
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
-
-            var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
-            foreach (var doc in documents)
-            {
-                doc.UserName = GetUserName(doc.UserID);
-            }
-            return View(documents.ToList());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Reports(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
-        {
-
-            ViewBag.BranchID = new SelectList(db.Branches, "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes, "DocTypeID", "Name");
-            ViewBag.UserID = new SelectList(users, "Id", "Email");
-            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
-
-            filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
-
-            if (submit == "Export")
-            {
-                string exportContent = GetExcel();
-                return File(new System.Text.UTF8Encoding().GetBytes(exportContent), "application/xls", "DocumentsReport.xls");
-            }
-            else
-            {
-                return View(filteredDocuments);
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -242,7 +216,7 @@ namespace VDMS.Controllers
             return user.UserName;
         }
 
-        private string GetExcel()
+        private string GetExcel(List<Document> filteredDocuments)
         {
             var grid = new WebGrid(source: filteredDocuments, canPage: false, canSort: false);
             string gridData = grid.GetHtml(columns: grid.Columns(
@@ -260,7 +234,7 @@ namespace VDMS.Controllers
 
         private List<Document> FilterDocuments(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient)
         {
-            filteredDocuments = new List<Document>();
+            List<Document> filteredDocuments = new List<Document>();
 
             string whereClause = string.Empty;
             whereClause += string.Format(" creationdate >= '{0}'", startDate ?? DateTime.MinValue);
@@ -312,6 +286,14 @@ namespace VDMS.Controllers
                 }
             }
             return filteredDocuments;
+        }
+
+        private void PopulateViewBag()
+        {
+            ViewBag.BranchID = new SelectList(db.Branches.OrderBy(d => d.Name), "BranchID", "Name");
+            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.OrderBy(d => d.Name), "DocTypeID", "Name");
+            ViewBag.UserID = new SelectList(users.OrderBy(d => d.Email), "Id", "Email");
+            ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
         }
     }
 }

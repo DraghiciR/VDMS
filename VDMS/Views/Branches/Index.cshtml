@@ -29,8 +29,8 @@
         })));
         if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
-            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.BranchID })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.BranchID })));
+            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.BranchID })));
         }
     }
 

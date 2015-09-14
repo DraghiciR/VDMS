@@ -42,7 +42,7 @@
                     <li id="vdf-home">@Html.ActionLink(" ", "Index", "Home")</li>
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Documents", "Reports", "Documents")</li>
+                        <li>@Html.ActionLink("Documents", "Index", "Documents")</li>
                     }
                     @if ((Request.IsAuthenticated) && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer"))))
                     {

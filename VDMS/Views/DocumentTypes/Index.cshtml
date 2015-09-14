@@ -28,8 +28,8 @@ format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" t
         })));
         if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
-            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocTypeID })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocTypeID })));
+            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocTypeID })));
         }
     }
 

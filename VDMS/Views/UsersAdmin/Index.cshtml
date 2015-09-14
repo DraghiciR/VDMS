@@ -23,8 +23,8 @@
         })));
         if (User.Identity.IsAuthenticated && (User.IsInRole("HelpDesk") || (User.IsInRole("MBB Developer"))))
         {
-            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
         }
     }
 
