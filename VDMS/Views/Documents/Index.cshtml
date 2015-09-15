@@ -8,17 +8,25 @@
     grid.Pager(WebGridPagerModes.NextPrevious);
 
     var gridColumns = new List<WebGridColumn>();
-    gridColumns.Add(grid.Column("Serial", format: (item) => item.GetSelectLink(item.DocSerial)));
+    gridColumns.Add(grid.Column("DocSerial", "Serial"));
     gridColumns.Add(grid.Column("Branch.Name", "Branch"));
     gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
     gridColumns.Add(grid.Column("UserName", "Created by"));
     gridColumns.Add(grid.Column("Inbound", "Inbound", 
-        format:@<text><input class="check-box" id="inboundChkBx" name="inboundChkBx" type="checkbox" value="@item.Inbound" disabled
+        format:@<text><input class="check-box" id="inboundChkBx" style="text-align:center" name="inboundChkBx" type="checkbox" value="@item.Inbound" disabled
                              @(item.Inbound == false ? null : "checked") /></text>
         ));
     gridColumns.Add(grid.Column("Recipient", "Recipient"));
     gridColumns.Add(grid.Column("Description", "Description", style: "description"));
     gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
+    if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
+    {
+        gridColumns.Add(grid.Column("Disabled", "Disabled",
+        format:@<text><input class="check-box" id="inboundChkBx" style="text-align:center" name="inboundChkBx" type="checkbox" value="@item.Disabled" disabled
+                     @(item.Disabled == false ? null : "checked") /></text>
+        ));
+    }
+
     gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Details", "Details", new
     {
         id = item.DocID
@@ -26,7 +34,7 @@
     if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
     {
         gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocID })));
-        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocID })));
+        gridColumns.Add(grid.Column(format: (item) => Html.ActionLink((@item.Disabled ? "Enable" : "Disable"), "Delete", new { id = item.DocID })));
     }
 }
 
