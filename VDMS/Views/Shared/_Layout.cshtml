@@ -40,7 +40,7 @@
                 <ul class="nav navbar-nav">
 
                     <li id="vdf-home">@Html.ActionLink(" ", "Index", "Home")</li>
-                    @if (Request.IsAuthenticated)
+                    @if ((Request.IsAuthenticated) && (!(User.IsInRole("HelpDesk"))))
                     {
                         <li>@Html.ActionLink("Documents", "Index", "Documents")</li>
                     }
