@@ -16,7 +16,7 @@
         grid.Pager(WebGridPagerModes.NextPrevious);
 
         var gridColumns = new List<WebGridColumn>();
-        gridColumns.Add(grid.Column("Email", "Email"));
+        gridColumns.Add(grid.Column("Email", @Functions.Sorter("Email", "Email", grid)));
         gridColumns.Add(grid.Column("Disabled", "Disabled",
     format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" type="checkbox" value="@item.Disabled" disabled
                          @(item.Disabled == false ? null : "checked") /></text>
