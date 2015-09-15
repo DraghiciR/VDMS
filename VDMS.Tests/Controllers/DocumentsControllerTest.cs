@@ -30,15 +30,48 @@ namespace VDMS.Tests.Controllers
             _controller.GetUserId = () => "21f99dff-792a-4824-bcf7-d8f741a30aca";
         }
 
-        //[Ignore]
         [TestMethod]
-        //not working because the Index is using HttpContext inside
         public void Index_AuthenticatedUser_ReturnsView() //documents grid
         {
             try
             {
                 _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer", "User" }, true);
                 result = _controller.Index();
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [Ignore]  //not working because a webgrid is declared inside the method from the controller
+        [TestMethod]
+        public void Report_AuthenticatedUser_ExportsToExcel() //report generation
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer", "User" }, true);
+                result = _controller.Index(DateTime.MinValue, DateTime.MaxValue, null, null, _controller.GetUserId(), "All", string.Empty, "Export");
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public void Report_AuthenticatedUser_GeneratesPreview() //report preview
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer", "User" }, true);
+                result = _controller.Index(DateTime.MinValue, DateTime.MaxValue, null, null, _controller.GetUserId(), "All", string.Empty, "Preview");
             }
             catch (Exception ex)
             {
