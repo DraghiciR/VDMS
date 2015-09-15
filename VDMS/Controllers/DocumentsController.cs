@@ -19,8 +19,15 @@ namespace VDMS.Controllers
 {
     public class DocumentsController : Controller
     {
-        private VDMSModel db = new VDMSModel();
+        public VDMSModel db = new VDMSModel();
         private IList<ApplicationUser> users = new ApplicationDbContext().Users.ToList();
+
+        public Func<string> GetUserId; //For testing
+
+        public DocumentsController()
+        {
+            GetUserId = () => User.Identity.GetUserId();
+        }
 
         // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
@@ -70,7 +77,7 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
-            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.View));
+            OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.View));
             return View(document);
         }
 
@@ -98,7 +105,7 @@ namespace VDMS.Controllers
             ComputeSerialNumber(document);
             if (ModelState.IsValid)
             {
-                document.UserID = User.Identity.GetUserId();
+                document.UserID = GetUserId();
                 document.CreationDate = DateTime.Now;
                 db.Documents.Add(document);
                 db.SaveChanges();
@@ -125,7 +132,7 @@ namespace VDMS.Controllers
             }
             Document document = db.Documents.Find(id);
             document.UserID = GetUserName(document.UserID);
-            
+
 
             if (document == null)
             {
@@ -147,10 +154,10 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                document.UserID = User.Identity.GetUserId();
+                document.UserID = GetUserId();
                 db.Entry(document).State = EntityState.Modified;
                 db.SaveChanges();
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
+                OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Edit));
                 return RedirectToAction("Index", "Documents");
             }
 
@@ -185,7 +192,7 @@ namespace VDMS.Controllers
             Document document = db.Documents.Find(id);
             db.Documents.Remove(document);
             db.SaveChanges();
-            OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Delete));
+            OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Delete));
             return RedirectToAction("Index");
         }
 
@@ -211,9 +218,17 @@ namespace VDMS.Controllers
 
         private string GetUserName(string userID)
         {
-            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            ApplicationUser user = UserManager.FindById(userID);
-            return user.UserName;
+            //easier to use the statements below than to mock ApplicationUserManager in Unit Tests
+            //ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            //ApplicationUser user = UserManager.FindById(userID);
+            //return user.UserName;
+
+            ApplicationUser user = new ApplicationDbContext().Users.ToList().Where(u => u.Id == userID).First();
+            if (user != null)
+            {
+                return user.Email ?? string.Empty;
+            }
+            return string.Empty;
         }
 
         private string GetExcel(List<Document> filteredDocuments)
