@@ -33,7 +33,8 @@ namespace VDMS
         {
             get
             {
-                return WebConfigurationManager.AppSettings["CredentialsPassword"] ?? string.Empty;
+                // return WebConfigurationManager.AppSettings["CredentialsPassword"] ?? string.Empty;
+                return "4roSiUS6";
             }
         }
         public static bool EnableSsl
