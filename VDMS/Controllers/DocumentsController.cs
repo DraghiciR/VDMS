@@ -148,7 +148,7 @@ namespace VDMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,MBB Developer")]
-        public ActionResult Edit([Bind(Include = "DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate")] Document document)
+        public ActionResult Edit([Bind(Include = "DocID,DocSerial,DocTypeID,BranchID,UserID,Inbound,Recipient,Description,CreationDate,Disabled")] Document document)
         {
             if (ModelState.IsValid)
             {
@@ -188,9 +188,24 @@ namespace VDMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Document document = db.Documents.Find(id);
-            db.Documents.Remove(document);
+
+            document.Disabled = !document.Disabled;
+            if (document.Disabled == true)
+                document.DisabledDate = DateTime.Now;
+            else
+                document.DisabledDate = null;
+
             db.SaveChanges();
-            OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Delete));
+
+            if (document.Disabled)
+            {
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Disable));
+            }
+            else
+            {
+                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Enable));
+            }
+
             return RedirectToAction("Index");
         }
 

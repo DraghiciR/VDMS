@@ -39,6 +39,12 @@ namespace VDMS.Models
         [Display(Name = "Creation Date")]
         public DateTime CreationDate { get; set; }
 
+        [Display(Name = "Disabled")]
+        public bool Disabled { get; set; }
+
+        [Display(Name = "Disable Date")]
+        public DateTime? DisabledDate { get; set; }
+
         public virtual Branch Branch { get; set; }
 
         public virtual DocumentType DocumentType { get; set; }
