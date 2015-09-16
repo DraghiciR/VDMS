@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using VDMS.Models;
 using Microsoft.AspNet.Identity;
+using VDMS.Models.Helpers;
 
 namespace VDMS.Controllers
 {
@@ -90,7 +91,7 @@ namespace VDMS.Controllers
             if (ModelState.IsValid)
             {
                 var role = new IdentityRole(roleViewModel.Name);
-                
+
                 var roleresult = await RoleManager.CreateAsync(role);
                 if (!roleresult.Succeeded)
                 {
@@ -114,7 +115,7 @@ namespace VDMS.Controllers
             {
                 return HttpNotFound();
             }
-            RoleViewModel roleModel = new RoleViewModel { Id = role.Id, Name = role.Name };            
+            RoleViewModel roleModel = new RoleViewModel { Id = role.Id, Name = role.Name };
             return View(roleModel);
         }
 
@@ -128,35 +129,46 @@ namespace VDMS.Controllers
             if (ModelState.IsValid)
             {
                 var role = await RoleManager.FindByIdAsync(roleViewModel.Id);
-                role.Name = roleViewModel.Name;                
+                role.Name = roleViewModel.Name;
                 await RoleManager.UpdateAsync(role);
                 return RedirectToAction("Index");
             }
             return View();
         }
 
-        // GET: RolesAdmin/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: RolesAdmin/Disable/5
+        public async Task<ActionResult> Disable(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            RoleViewModel roleViewModel = await db.RoleViewModels.FindAsync(id);
+            RoleViewModel roleViewModel = null;
+
+            try
+            {
+                roleViewModel = await db.RoleViewModels.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                roleViewModel = null;
+            }
             if (roleViewModel == null)
             {
                 return HttpNotFound();
             }
+
             return View(roleViewModel);
         }
 
         // POST: RolesAdmin/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Disable")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DisableConfirmed(string id)
         {
             RoleViewModel roleViewModel = await db.RoleViewModels.FindAsync(id);
-            db.RoleViewModels.Remove(roleViewModel);
+            roleViewModel.Disabled = true;
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

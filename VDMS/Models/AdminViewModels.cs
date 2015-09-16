@@ -7,12 +7,11 @@ using System.Web.Mvc;
 
 namespace VDMS.Models
 {
-    public class RoleViewModel
+    public class RoleViewModel : Microsoft.AspNet.Identity.EntityFramework.IdentityRole
     {
-        public string Id { get; set; }
         [Required(AllowEmptyStrings = false)]
         [Display(Name = "RoleName")]
-        public string Name { get; set; }
+        public bool Disabled { get; set; }
     }
     public class EditUserViewModel
     {
