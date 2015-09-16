@@ -16,31 +16,22 @@
             @Html.DisplayFor(model => model.UserName)
         </dd>
         <dt>
+            Role
+        </dt>
+        <dd>
+           @ViewBag.RoleName
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Disabled)
         </dt>
         <dd>
             @Html.CheckBoxFor(model => model.Disabled, new { disabled = "disabled" })
         </dd>
+      
+       
     </dl>
 </div>
-<h4>List of roles for this user</h4>
-@if (ViewBag.RoleNames.Count == 0)
-{
-<hr />
-<p>No roles found for this user.</p>
-}
 
-<table class="table">
-
-    @foreach (var item in ViewBag.RoleNames)
-    {
-    <tr>
-        <td>
-            @item
-        </td>
-    </tr>
-    }
-</table>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

@@ -203,11 +203,11 @@ namespace VDMS.Controllers
 
             if (document.Disabled)
             {
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Disable));
+                OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Disable));
             }
             else
             {
-                OperationLogger.LogDocumentEvent(User.Identity.GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Enable));
+                OperationLogger.LogDocumentEvent(GetUserId(), document.DocID, OperationLogger.GetEnumDescription(OperationType.Enable));
             }
 
             return RedirectToAction("Index");

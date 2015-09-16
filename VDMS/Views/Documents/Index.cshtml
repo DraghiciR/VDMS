@@ -4,21 +4,21 @@
 
     VDMS.Models.Document document = new VDMS.Models.Document();
 
-    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", defaultSort: "CreationDate");
     grid.Pager(WebGridPagerModes.NextPrevious);
 
     var gridColumns = new List<WebGridColumn>();
-    gridColumns.Add(grid.Column("DocSerial", "Serial"));
-    gridColumns.Add(grid.Column("Branch.Name", "Branch"));
-    gridColumns.Add(grid.Column("DocumentType.Name", "Type"));
-    gridColumns.Add(grid.Column("UserName", "Created by"));
+    gridColumns.Add(grid.Column("DocSerial", @Functions.Sorter("DocSerial", "Serial", grid)));
+    gridColumns.Add(grid.Column("Branch.Name", @Functions.Sorter("Branch.Name", "Branch", grid)));
+    gridColumns.Add(grid.Column("DocumentType.Name", @Functions.Sorter("DocumentType.Name", "Type", grid)));
+    gridColumns.Add(grid.Column("UserName", @Functions.Sorter("UserName", "User", grid)));
     gridColumns.Add(grid.Column("Inbound", "Inbound", 
         format:@<text><input class="check-box" id="inboundChkBx" style="text-align:center" name="inboundChkBx" type="checkbox" value="@item.Inbound" disabled
                              @(item.Inbound == false ? null : "checked") /></text>
         ));
-    gridColumns.Add(grid.Column("Recipient", "Recipient"));
-    gridColumns.Add(grid.Column("Description", "Description", style: "description"));
-    gridColumns.Add(grid.Column("CreationDate", "Creation Date", format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
+    gridColumns.Add(grid.Column("Recipient", @Functions.Sorter("Recipient", "Recipient", grid)));
+    gridColumns.Add(grid.Column("Description", @Functions.Sorter("Description", "Description", grid), style: "description"));
+    gridColumns.Add(grid.Column("CreationDate", @Functions.Sorter("CreationDate", "Creation Date", grid), format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
     if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
     {
         gridColumns.Add(grid.Column("Disabled", "Disabled",
@@ -52,7 +52,16 @@
     <script type="text/javascript">
         $(function () {
             // This will make every element with the class "date-picker" into a DatePicker element
-            $('.date-picker').datepicker();
+            $('.date-picker').datepicker({
+                dateFormat: "dd-M-yy",
+                showStatus: true,
+                showWeeks: true,
+                currentText: 'Now',
+                autoSize: true,
+                gotoCurrent: true,
+                showAnim: 'blind',
+                highlightWeek: true
+            });;
         })
     </script>
 
@@ -105,6 +114,8 @@
 
                     $("<a>")
                       .attr("tabIndex", -1)
+                      .attr("title", "Show all")
+                      .attr("role", "button")
                       .tooltip()
 
                       .appendTo(this.wrapper)
@@ -115,7 +126,7 @@
                           text: false
                       })
                       .removeClass("ui-corner-all")
-                      .addClass("custom-combobox-toggle ui-corner-right")
+                      .addClass("ui-button ui-widget ui-state-default ui-button-icon-only custom-combobox-toggle ui-corner-right")
                       .mousedown(function () {
                           wasOpen = input.autocomplete("widget").is(":visible");
                       })

@@ -12,11 +12,11 @@
 
 <body>
     @{
-        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", defaultSort: "Name");
         grid.Pager(WebGridPagerModes.NextPrevious);
 
         var gridColumns = new List<WebGridColumn>();
-        gridColumns.Add(grid.Column("Name", "Name"));
+        gridColumns.Add(grid.Column("Name", @Functions.Sorter("Name", "Name", grid)));
         if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));

@@ -74,7 +74,7 @@ namespace VDMS.Controllers
             }
             var user = await UserManager.FindByIdAsync(id);
 
-            ViewBag.RoleNames = await UserManager.GetRolesAsync(user.Id);
+            ViewBag.RoleName = (await UserManager.GetRolesAsync(user.Id)).FirstOrDefault();
 
             return View(user);
         }
