@@ -14,7 +14,7 @@ using Microsoft.AspNet.Identity;
 
 namespace VDMS.Controllers
 {
-    [Authorize(Roles = "MBB Developer")]
+    [Authorize(Roles = "HelpDesk, MBB Developer")]
     public class RolesAdminController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -54,12 +54,14 @@ namespace VDMS.Controllers
             }
         }
         // GET: RolesAdmin
+        [Authorize(Roles = "HelpDesk")]
         public ActionResult Index()
         {
             return View(RoleManager.Roles);
         }
 
         // GET: RolesAdmin/Details/5
+        [Authorize(Roles = "HelpDesk")]
         public async Task<ActionResult> Details(string id)
         {
             if (id == null)
