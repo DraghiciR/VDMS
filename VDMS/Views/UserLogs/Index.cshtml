@@ -11,7 +11,7 @@
         gridColumns.Add(grid.Column("UserName", "Username"));
         gridColumns.Add(grid.Column("AffectedUserName", "Affected User"));
         gridColumns.Add(grid.Column("OperationType","OperationType"));
-        gridColumns.Add(grid.Column("LogDate","LogDate"));
+        gridColumns.Add(grid.Column("LogDate","LogDate",format: (item) => item.LogDate.ToString("dd-MMM-yyyy HH:mm")));
         }
 
         <h2>User Logs</h2>
