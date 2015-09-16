@@ -30,15 +30,24 @@
         <dd>
             @Html.CheckBoxFor(model => model.Disabled, new { disabled = "disabled" })
         </dd>
+        <dt>
+
+        </dt>
+        <dd>
+            
+        </dd>
 
     </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="@ViewBag.Title" class="btn btn-default" />
+        </div>
+
         <div class="form-actions no-color">
-            <input type="submit" value="@ViewBag.Title" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
-    }
+        }
 </div>
