@@ -21,6 +21,8 @@ namespace VDMS.Models
 
         public DateTime LogDate { get; set; }
 
+        public virtual Document document {get;set;}
+
         [NotMapped]
         public string UserName { get; set; }
     }

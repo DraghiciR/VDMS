@@ -24,6 +24,7 @@ namespace VDMS.Controllers
             foreach (var doclog in documentlogs)
             {
                 doclog.UserName = GetUserName(doclog.UserID);
+                //doclog.DocID = db.Documents.FindAsync()
             }
             return View(await documentlogs.ToListAsync());
         }
