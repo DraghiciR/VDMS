@@ -11,6 +11,7 @@ using VDMS.Tests.Mocks;
 using VDMS.Models;
 
 using Moq;
+using System.Security.Principal;
 
 namespace VDMS.Tests.Controllers
 {
@@ -30,6 +31,8 @@ namespace VDMS.Tests.Controllers
             _controller.GetUserId = () => "21f99dff-792a-4824-bcf7-d8f741a30aca";
         }
 
+        #region Authenticated User
+
         [TestMethod]
         public void Index_AuthenticatedUser_ReturnsView() //documents grid
         {
@@ -45,6 +48,7 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(((ViewResult)result).ViewName, "Index");
         }
 
         [Ignore]  //not working because a webgrid is declared inside the method from the controller
@@ -97,6 +101,7 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(((ViewResult)result).ViewName, "Create");
         }
 
         [TestMethod]
@@ -139,6 +144,7 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(((ViewResult)result).ViewName, "Edit");
         }
 
         //in case of automatic runs, the creation of the document should be run first
@@ -189,6 +195,7 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(((ViewResult)result).ViewName, "Delete");
         }
 
         //in case of automatic runs, the creation and editing of the document should be run first
@@ -236,6 +243,108 @@ namespace VDMS.Tests.Controllers
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
 
+        #endregion Authenticated User
+
+        #region Insufficient Permissions for Viewer
+
+        [TestMethod]
+        public void Create_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer" }, true);
+                result = _controller.Create();
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(RedirectResult));
+            Assert.AreEqual(((RedirectResult)result).Url, "~/Error/Denied");
+        }
+
+        [TestMethod]
+        public void Edit_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer" }, true);
+                result = _controller.Edit(-1);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(RedirectResult));
+            Assert.AreEqual(((RedirectResult)result).Url, "~/Error/Denied");
+        }
+
+        [TestMethod]
+        public void Delete_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "Viewer" }, true);
+                result = _controller.Delete(-1);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(RedirectResult));
+            Assert.AreEqual(((RedirectResult)result).Url, "~/Error/Denied");
+        }
+
+        #endregion Insufficient Permissions
+
+        #region Insufficient Permissions for User
+
+        [TestMethod]
+        public void Edit_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "User" }, true);
+                result = _controller.Edit(-1);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(RedirectResult));
+            Assert.AreEqual(((RedirectResult)result).Url, "~/Error/Denied");
+        }
+
+        [TestMethod]
+        public void Delete_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
+        {
+            try
+            {
+                _controller.ControllerContext = MockWebContext.AuthenticatedContext("ralucavianina.draghici@vodafone.com", new[] { "User" }, true);
+                result = _controller.Delete(-1);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                errorMessage = ex.Message;
+            }
+            Assert.IsNotNull(result, errorMessage);
+            Assert.IsInstanceOfType(result, typeof(RedirectResult));
+            Assert.AreEqual(((RedirectResult)result).Url, "~/Error/Denied");
+        }
+
+        #endregion Insufficient Permissions
+
+        #region Helpers
+
         private Document CreateCustomDocument()
         {
             document = new Document();
@@ -265,5 +374,7 @@ namespace VDMS.Tests.Controllers
             document.UserName = "maxim.tabacari@vodafone.com";
             return document;
         }
+
+        #endregion Helpers
     }
 }

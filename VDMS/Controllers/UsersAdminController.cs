@@ -274,6 +274,16 @@ namespace VDMS.Controllers
                     }
                 }
 
+                if (user.Disabled)
+                {
+                    result = await UserManager.UpdateSecurityStampAsync(user.Id);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", result.Errors.First());
+                        return View();
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
             return View();

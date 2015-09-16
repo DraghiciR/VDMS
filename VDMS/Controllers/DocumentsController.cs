@@ -165,9 +165,13 @@ namespace VDMS.Controllers
         }
 
         // GET: Documents/Delete/5
-        [Authorize(Roles = "Admin,MBB Developer")]
         public ActionResult Delete(int? id)
         {
+            if (Request.IsAuthenticated && (User.IsInRole("Viewer") || User.IsInRole("HelpDesk") || (User.IsInRole("User"))))
+            {
+                return Redirect("~/Error/Denied");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
