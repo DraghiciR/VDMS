@@ -59,7 +59,9 @@ textarea {
 
 
 }
-
+#vdf-radio {
+	margin-top:7px;
+}
 
 select{
  border-radius: 3px !important;
