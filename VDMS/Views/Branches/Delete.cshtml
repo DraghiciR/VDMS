@@ -1,12 +1,12 @@
 ﻿@model VDMS.Models.Branch
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = Model.Disabled ? "Enable" : "Disable";
 }
 
-<h2>Delete</h2>
+<h2>@ViewBag.Title</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to @ViewBag.Title.ToLower() this?</h3>
 <div>
     <h4>Branch</h4>
     <hr />
@@ -30,9 +30,8 @@
         <dt>
             @Html.DisplayNameFor(model => model.Disabled)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.Disabled)
+            @Html.CheckBoxFor(model => model.Disabled, new { disabled = "disabled" })
         </dd>
 
     </dl>
@@ -41,7 +40,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="@ViewBag.Title" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

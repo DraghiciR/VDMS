@@ -51,6 +51,18 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.DocumentTypes.Any(d => d.Name == documentType.Name))
+                {
+                    ModelState.AddModelError("", "The name is already taken.");
+                    return View();
+                }
+
+                if (db.DocumentTypes.Any(d => d.Serial == documentType.Serial))
+                {
+                    ModelState.AddModelError("", "The serial is already assigned.");
+                    return View();
+                }
+
                 db.DocumentTypes.Add(documentType);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -83,6 +95,18 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.DocumentTypes.Any(d => d.Name == documentType.Name && d.DocTypeID != documentType.DocTypeID))
+                {
+                    ModelState.AddModelError("", "The name is already taken.");
+                    return View();
+                }
+
+                if (db.DocumentTypes.Any(d => d.Serial == documentType.Serial && d.DocTypeID != documentType.DocTypeID))
+                {
+                    ModelState.AddModelError("", "The serial is already assigned.");
+                    return View();
+                }
+
                 db.Entry(documentType).State = EntityState.Modified;
 
                 if (documentType.Disabled == true)
@@ -117,7 +141,12 @@ namespace VDMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             DocumentType documentType = db.DocumentTypes.Find(id);
-            db.DocumentTypes.Remove(documentType);
+            documentType.Disabled = !documentType.Disabled;
+            if (!documentType.Disabled)
+                documentType.DisabledDate = null;
+            else
+                documentType.DisabledDate = DateTime.Now;
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }

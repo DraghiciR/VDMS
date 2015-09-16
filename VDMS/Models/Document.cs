@@ -37,6 +37,7 @@ namespace VDMS.Models
         public string Description { get; set; }
 
         [Display(Name = "Creation Date")]
+        [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreationDate { get; set; }
 
         [Display(Name = "Disabled")]

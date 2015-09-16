@@ -51,6 +51,12 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(db.Branches.Any(b => b.Name == branch.Name))
+                {
+                    ModelState.AddModelError("", "The name is already taken.");
+                    return View();
+                }
+
                 db.Branches.Add(branch);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -83,6 +89,12 @@ namespace VDMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (db.Branches.Any(b => b.Name == branch.Name && b.BranchID != branch.BranchID))
+                {
+                    ModelState.AddModelError("", "The name is already taken.");
+                    return View();
+                }
+
                 db.Entry(branch).State = EntityState.Modified;
 
                 if (branch.Disabled == true)
@@ -117,7 +129,12 @@ namespace VDMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Branch branch = db.Branches.Find(id);
-            db.Branches.Remove(branch);
+            branch.Disabled = !branch.Disabled;
+            if (!branch.Disabled)
+                branch.DisabledDate = null;
+            else
+                branch.DisabledDate = DateTime.Now;
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }
