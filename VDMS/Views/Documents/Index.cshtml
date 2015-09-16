@@ -75,7 +75,7 @@
 
                     this.element.hide();
                     this._createAutocomplete();
-                    this._createShowAllButton();
+                   
                 },
 
                 _createAutocomplete: function () {
@@ -108,40 +108,7 @@
                     });
                 },
 
-                _createShowAllButton: function () {
-                    var input = this.input,
-                      wasOpen = false;
-
-                    $("<a>")
-                      .attr("tabIndex", -1)
-                      .attr("title", "Show all")
-                      .attr("role", "button")
-                      .tooltip()
-
-                      .appendTo(this.wrapper)
-                      .button({
-                          icons: {
-                              primary: "ui-icon-triangle-1-s"
-                          },
-                          text: false
-                      })
-                      .removeClass("ui-corner-all")
-                      .addClass("ui-button ui-widget ui-state-default ui-button-icon-only custom-combobox-toggle ui-corner-right")
-                      .mousedown(function () {
-                          wasOpen = input.autocomplete("widget").is(":visible");
-                      })
-                      .click(function () {
-                          input.focus();
-
-                          // Close if already visible
-                          if (wasOpen) {
-                              return;
-                          }
-
-                          // Pass empty string as value to search for, displaying all results
-                          input.autocomplete("search", "");
-                      });
-                },
+              
 
                 _source: function (request, response) {
                     var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
