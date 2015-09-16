@@ -25,5 +25,7 @@ namespace VDMS.Models
 
         [NotMapped]
         public string UserName { get; set; }
+        [NotMapped]
+        public string DocSerial { get; set; }
     }
 }
