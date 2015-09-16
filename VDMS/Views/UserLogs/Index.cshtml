@@ -1,0 +1,29 @@
+﻿@model IEnumerable<VDMS.Models.UserLog>
+
+    @{
+    ViewBag.Title = "User Logs";
+
+    VDMS.Models.UserLog userlog = new VDMS.Models.UserLog();
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "gridContent");
+    grid.Pager(WebGridPagerModes.NextPrevious);
+    var gridColumns = new List<WebGridColumn>
+        ();
+        gridColumns.Add(grid.Column("UserName", "Username"));
+        gridColumns.Add(grid.Column("AffectedUserName", "Affected User"));
+        gridColumns.Add(grid.Column("OperationType","OperationType"));
+        gridColumns.Add(grid.Column("LogDate","LogDate"));
+        }
+
+        <h2>User Logs</h2>
+
+        <div id="gridContent">
+            @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+            headerStyle: "header",
+            selectedRowStyle: "select",
+            columns: grid.Columns(gridColumns.ToArray()))
+
+        </div>
+
+
+
+

@@ -52,5 +52,7 @@ namespace VDMS.Models
         public System.Data.Entity.DbSet<VDMS.Models.EditUserViewModel> EditUserViewModels { get; set; }
 
         public System.Data.Entity.DbSet<VDMS.Models.RoleViewModel> RoleViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<VDMS.Models.UserLog> UserLogs { get; set; }
     }
 }
