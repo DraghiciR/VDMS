@@ -17,6 +17,11 @@
 .vdf-logo img{
 	
 }
+
+#vdf-check{
+    margin-top:11px;
+    margin-left:2px;
+}
 .vdf-brand-text{
 	text-decoration: none;
 	display: block;
@@ -163,6 +168,9 @@ tr:nth-of-type(even) {
 .custom-combobox {
     position: relative;
     display: inline-block;
+}
+.custom-combobox input {
+	width:150%;
 }
 
 .custom-combobox-toggle {
