@@ -21,8 +21,9 @@ namespace VDMS.Models
 
         public DateTime LogDate { get; set; }
 
-        //public virtual User User { get; set; }
-
-        //public virtual User User1 { get; set; }
+        [NotMapped]
+        public string UserName { get; set; }
+        [NotMapped]
+        public string AffectedUserName { get; set; }
     }
 }
