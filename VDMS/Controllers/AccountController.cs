@@ -69,22 +69,13 @@ namespace VDMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            ApplicationUser user = null;
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             // Require the user to have a confirmed email before they can log on.
-            try
-            {
-                user = await UserManager.FindByNameAsync(model.Email);
-            }
-            catch (Exception ex)
-            {
-                user = null;
-                ModelState.AddModelError(string.Empty, ex.Message);
-            }
+            var user = await UserManager.FindByNameAsync(model.Email);
             if (user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
@@ -102,15 +93,7 @@ namespace VDMS.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            SignInStatus result = SignInStatus.Failure;
-            try
-            {
-                result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-            }
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -125,7 +108,7 @@ namespace VDMS.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
         }

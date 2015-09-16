@@ -24,13 +24,14 @@
         if (User.Identity.IsAuthenticated && User.IsInRole("MBB Developer"))
         {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.Id })));
-            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Disable", "Disable", new { id = item.Id })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.Id })));
         }
     }
 
     <div id="gridContent">
         @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
                 headerStyle: "header",
+                //alternatingRowStyle: "alt",
                 selectedRowStyle: "select",
                 columns: grid.Columns(gridColumns.ToArray()))
     </div>
