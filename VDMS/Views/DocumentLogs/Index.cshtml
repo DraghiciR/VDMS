@@ -1,27 +1,28 @@
 ﻿@model IEnumerable<VDMS.Models.DocumentLog>
 
-    @{
-        ViewBag.Title = "Document Logs";
-        VDMS.Models.DocumentLog documentlog = new VDMS.Models.DocumentLog();
-        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "gridContent", defaultSort: "LogDate");
-        grid.Pager(WebGridPagerModes.NextPrevious);
-        var gridColumns = new List<WebGridColumn>
-            ();
-        gridColumns.Add(grid.Column("UserName", @Functions.Sorter("UserName", "User", grid)));
-        gridColumns.Add(grid.Column("DocID", @Functions.Sorter("DocID", "Doc ID", grid)));
-        gridColumns.Add(grid.Column("OperationType", @Functions.Sorter("OperationType", "Operation Type", grid)));
-        gridColumns.Add(grid.Column("LogDate", @Functions.Sorter("LogDate", "Date", grid), format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
-        }
+@{
+    ViewBag.Title = "Document Logs";
+    VDMS.Models.DocumentLog documentlog = new VDMS.Models.DocumentLog();
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "gridContent", defaultSort: "LogDate");
+    grid.Pager(WebGridPagerModes.NextPrevious);
+    var gridColumns = new List<WebGridColumn>
+        ();
+    gridColumns.Add(grid.Column("UserName", @Functions.Sorter("UserName", "User", grid)));
+    gridColumns.Add(grid.Column("DocID", @Functions.Sorter("DocID", "Doc ID", grid)));
+    gridColumns.Add(grid.Column("OperationType", @Functions.Sorter("OperationType", "Operation Type", grid)));
+    gridColumns.Add(grid.Column("LogDate", @Functions.Sorter("LogDate", "Date", grid), format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
+    
+}
 
-        <h2>Document Logs</h2>
+<h2>Document Logs</h2>
 
-        <div id="gridContent">
-            @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+<div id="gridContent">
+    @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
             headerStyle: "header",
             selectedRowStyle: "select",
             columns: grid.Columns(gridColumns.ToArray()))
 
-        </div>
+</div>
 
 
 

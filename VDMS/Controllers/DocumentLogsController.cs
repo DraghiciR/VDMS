@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 
 namespace VDMS.Controllers
 {
+    [Authorize(Roles = "MBB Developer")]
     public class DocumentLogsController : Controller
     {
         private VDMSModel db = new VDMSModel();
@@ -21,10 +22,11 @@ namespace VDMS.Controllers
         public async Task<ActionResult> Index()
         {
             var documentlogs = db.DocumentLogs.OrderByDescending(d => d.LogDate);
+            
             foreach (var doclog in documentlogs)
             {
                 doclog.UserName = GetUserName(doclog.UserID);
-                //doclog.DocID = db.Documents.FindAsync()
+                doclog.DocSerial = GetDocSerial(doclog.DocID);
             }
             return View(await documentlogs.ToListAsync());
         }
@@ -42,6 +44,18 @@ namespace VDMS.Controllers
                 return user.UserName;
             }
 
+        }
+        private string GetDocSerial(int docID)
+        {
+            Document myDoc =  db.Documents.Find(docID);
+            if (myDoc == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return myDoc.DocSerial;
+            }
         }
     }
 }

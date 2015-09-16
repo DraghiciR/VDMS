@@ -10,7 +10,7 @@ using VDMS.Models;
 
 namespace VDMS.Controllers
 {
-    [Authorize(Roles = "HelpDesk, MBB Developer")]
+    [Authorize(Roles = "Admin, MBB Developer")]
     public class BranchesController : Controller
     {
         private VDMSModel db = new VDMSModel();
