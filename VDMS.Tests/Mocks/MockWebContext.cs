@@ -16,7 +16,7 @@ namespace VDMS.Tests.Mocks
         public Mock<HttpSessionStateBase> Session { get; private set; }
         public Mock<ActionExecutingContext> ActionExecuting { get; private set; }
         public Mock<IIdentity> MockIdentity { get; set; }
-       
+
         public HttpCookieCollection Cookies { get; private set; }
 
         public MockWebContext()
@@ -47,11 +47,13 @@ namespace VDMS.Tests.Mocks
             Http.SetupGet(c => c.User.Identity).Returns(MockIdentity.Object);
             Http.SetupGet(c => c.User.Identity.Name).Returns(user);
             MockIdentity.SetupGet(c => c.Name).Returns(user);
-            Http.SetupGet(c => c.User.Identity.IsAuthenticated).Returns(isAuthenticated);
+            Http.SetupGet(c => c.User.Identity.IsAuthenticated).Returns(isAuthenticated);  //authenticate user
             foreach (var group in groups)
             {
                 Http.Setup(c => c.User.IsInRole(group)).Returns(isAuthenticated);
             }
+
+            Request.Setup(c => c.IsAuthenticated).Returns(isAuthenticated);  //authenticate request
         }
 
         public static ControllerContext BasicContext()
