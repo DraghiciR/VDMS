@@ -8,9 +8,9 @@
     var gridColumns = new List<WebGridColumn>
         ();
         gridColumns.Add(grid.Column("UserName", "Username"));
-        gridColumns.Add(grid.Column("DocID", "ID Doc"));
+        gridColumns.Add(grid.Column("DocSerial", "Document"));
         gridColumns.Add(grid.Column("OperationType","OperationType"));
-        gridColumns.Add(grid.Column("LogDate","LogDate"));
+        gridColumns.Add(grid.Column("LogDate","LogDate",format: (item) => item.LogDate.ToString("dd-MMM-yyyy HH:mm")));
         }
 
         <h2>Document Logs</h2>
