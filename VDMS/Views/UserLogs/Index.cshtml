@@ -1,17 +1,17 @@
 ﻿@model IEnumerable<VDMS.Models.UserLog>
 
     @{
-    ViewBag.Title = "User Logs";
+        ViewBag.Title = "User Logs";
 
-    VDMS.Models.UserLog userlog = new VDMS.Models.UserLog();
-    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "gridContent");
-    grid.Pager(WebGridPagerModes.NextPrevious);
-    var gridColumns = new List<WebGridColumn>
-        ();
-        gridColumns.Add(grid.Column("UserName", "Username"));
-        gridColumns.Add(grid.Column("AffectedUserName", "Affected User"));
-        gridColumns.Add(grid.Column("OperationType","OperationType"));
-        gridColumns.Add(grid.Column("LogDate","LogDate"));
+        VDMS.Models.UserLog userlog = new VDMS.Models.UserLog();
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "gridContent", defaultSort: "LogDate");
+        grid.Pager(WebGridPagerModes.NextPrevious);
+        var gridColumns = new List<WebGridColumn>
+            ();
+        gridColumns.Add(grid.Column("UserName", @Functions.Sorter("UserName", "User", grid)));
+        gridColumns.Add(grid.Column("AffectedUserName", @Functions.Sorter("AffectedUserName", "Affected User", grid)));
+        gridColumns.Add(grid.Column("OperationType", @Functions.Sorter("OperationType", "Operation Type", grid)));
+        gridColumns.Add(grid.Column("LogDate", @Functions.Sorter("LogDate", "Date", grid), format: (item) => item.CreationDate.ToString("dd-MMM-yyyy")));
         }
 
         <h2>User Logs</h2>
