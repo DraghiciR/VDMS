@@ -248,8 +248,8 @@ namespace VDMS.Controllers
         {
             var grid = new WebGrid(source: filteredDocuments, canPage: false, canSort: false);
             string gridData = grid.GetHtml(columns: grid.Columns(
-                                                    grid.Column("DocSerial", "DocSerial"),
-                                                    grid.Column("Branch.Name", "Branch Name"),
+                                                    grid.Column("DocSerial", "Serial"),
+                                                    grid.Column("Branch.Name", "Branch"),
                                                     grid.Column("DocumentType.Name", "Type"),
                                                     grid.Column("UserName", "Created by"),
                                                     grid.Column("Inbound", "Inbound"),
