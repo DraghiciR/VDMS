@@ -48,7 +48,6 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            Assert.AreEqual(((ViewResult)result).ViewName, "Index");
         }
 
         [Ignore]  //not working because a webgrid is declared inside the method from the controller
@@ -101,7 +100,6 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            Assert.AreEqual(((ViewResult)result).ViewName, "Create");
         }
 
         [TestMethod]
@@ -144,7 +142,6 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            Assert.AreEqual(((ViewResult)result).ViewName, "Edit");
         }
 
         //in case of automatic runs, the creation of the document should be run first
@@ -195,7 +192,6 @@ namespace VDMS.Tests.Controllers
             }
             Assert.IsNotNull(result, errorMessage);
             Assert.IsInstanceOfType(result, typeof(ViewResult));
-            Assert.AreEqual(((ViewResult)result).ViewName, "Delete");
         }
 
         //in case of automatic runs, the creation and editing of the document should be run first
