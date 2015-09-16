@@ -12,7 +12,7 @@
     gridColumns.Add(grid.Column("Branch.Name", @Functions.Sorter("Branch.Name", "Branch", grid)));
     gridColumns.Add(grid.Column("DocumentType.Name", @Functions.Sorter("DocumentType.Name", "Type", grid)));
     gridColumns.Add(grid.Column("UserName", @Functions.Sorter("UserName", "User", grid)));
-    gridColumns.Add(grid.Column("Inbound", "Inbound", 
+    gridColumns.Add(grid.Column("Inbound", "Inbound",
         format:@<text><input class="check-box" id="inboundChkBx" style="text-align:center" name="inboundChkBx" type="checkbox" value="@item.Inbound" disabled
                              @(item.Inbound == false ? null : "checked") /></text>
         ));
@@ -23,7 +23,7 @@
     {
         gridColumns.Add(grid.Column("Disabled", "Disabled",
         format:@<text><input class="check-box" id="inboundChkBx" style="text-align:center" name="inboundChkBx" type="checkbox" value="@item.Disabled" disabled
-                     @(item.Disabled == false ? null : "checked") /></text>
+                             @(item.Disabled == false ? null : "checked") /></text>
         ));
     }
 
@@ -212,6 +212,16 @@
         });
     </script>
 
+    <script type="text/javascript">
+        $(function () {
+            $('div.expander').expander({
+                slicePoint: 0,
+                expandText: 'Show Filtering',
+                userCollapseText: 'Hide Filtering'
+            });
+        });
+    </script>
+
 </head>
 
 <body>
@@ -221,75 +231,78 @@
         <div class="form-horizontal">
             <hr />
 
-            <div class="form-group">
-                <div class="form-group col-md-5">
-                    @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+            <div class="expander">
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group col-md-5">
-                    @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.DocTypeID, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
+                            @Html.HiddenFor(model => document.DocTypeID)
+                        </div>
+                    </div>
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.BranchID, "Branch", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
+                            @Html.HiddenFor(model => document.BranchID)
+                        </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control", id = "comboboxUser" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.Recipient, "Recipient", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("Recipient", null, "Select Recipient", htmlAttributes: new { @class = "form-control", id = "combobox" })
+                            @Html.HiddenFor(model => document.Recipient)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("Origin", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10" id="vdf-radio">
+                            @Html.RadioButton("Inbound", "Inbound") Inbound
+                            @Html.RadioButton("Inbound", "Outbound") Outbound
+                            @Html.RadioButton("Inbound", "All", true) All
+
+                            @Html.HiddenFor(model => document.Inbound)
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        <input type="submit" name="submit" value="Preview" class="btn btn-default" />
+                        &nbsp;  &nbsp;
+                        <input type="submit" name="submit" value="Export" class="btn btn-default" />
+                    </div>
+                </div>
+
             </div>
-
-            <div class="form-group">
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => document.DocTypeID, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
-                        @Html.HiddenFor(model => document.DocTypeID)
-                    </div>
-                </div>
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => document.BranchID, "Branch", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
-                        @Html.HiddenFor(model => document.BranchID)
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="form-group col-md-5">
-                    @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control" , id = "comboboxUser" })
-                    </div>
-                </div>
-
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => document.Recipient, "Recipient", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownList("Recipient", null, "Select Recipient", htmlAttributes: new { @class = "form-control", id = "combobox" })
-                        @Html.HiddenFor(model => document.Recipient)
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="form-group col-md-5">
-                    @Html.Label("Origin", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10" id="vdf-radio">
-                        @Html.RadioButton("Inbound", "Inbound") Inbound
-                        @Html.RadioButton("Inbound", "Outbound") Outbound
-                        @Html.RadioButton("Inbound", "All", true) All
-
-                        @Html.HiddenFor(model => document.Inbound)
-                    </div>
-                </div>
-
-                <div class="form-group col-md-5">
-                    <input type="submit" name="submit" value="Preview" class="btn btn-default" />
-                    &nbsp;  &nbsp;
-                    <input type="submit" name="submit" value="Export" class="btn btn-default" />
-                </div>
-            </div>
-
 
             <br /><br />
             <div id="gridContent">
