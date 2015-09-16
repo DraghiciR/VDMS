@@ -87,7 +87,7 @@ namespace VDMS.Controllers
                 return Redirect("~/Error/Denied");
             }
 
-            PopulateViewBag();
+            PopulateViewBag(true);
 
             return View();
         }
@@ -320,10 +320,18 @@ namespace VDMS.Controllers
             return filteredDocuments;
         }
 
-        private void PopulateViewBag()
+        private void PopulateViewBag(bool createForm = false)
         {
-            ViewBag.BranchID = new SelectList(db.Branches.OrderBy(d => d.Name), "BranchID", "Name");
-            ViewBag.DocTypeID = new SelectList(db.DocumentTypes.OrderBy(d => d.Name), "DocTypeID", "Name");
+            if (createForm == false)
+            {
+                ViewBag.BranchID = new SelectList(db.Branches.OrderBy(d => d.Name), "BranchID", "Name");
+                ViewBag.DocTypeID = new SelectList(db.DocumentTypes.OrderBy(d => d.Name), "DocTypeID", "Name");
+            }
+            else
+            {
+                ViewBag.BranchID = new SelectList(db.Branches.Where(d=>!d.Disabled).OrderBy(d => d.Name), "BranchID", "Name");
+                ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d=>!d.Disabled).OrderBy(d => d.Name), "DocTypeID", "Name");
+            }
             ViewBag.UserID = new SelectList(new ApplicationDbContext().Users.ToList().OrderBy(d => d.Email), "Id", "Email");
             ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
         }
