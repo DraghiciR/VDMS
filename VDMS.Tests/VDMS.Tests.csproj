@@ -47,6 +47,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions" />
@@ -89,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BranchesControllerTest.cs" />
     <Compile Include="Controllers\DocumentsControllerTest.cs" />
     <Compile Include="Mocks\MockWebContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
