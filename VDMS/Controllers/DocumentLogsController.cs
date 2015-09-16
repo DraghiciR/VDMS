@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 
 namespace VDMS.Controllers
 {
+    [Authorize(Roles = "MBB Developer")]
     public class DocumentLogsController : Controller
     {
         private VDMSModel db = new VDMSModel();

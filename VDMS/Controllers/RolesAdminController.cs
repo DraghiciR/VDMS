@@ -54,14 +54,14 @@ namespace VDMS.Controllers
             }
         }
         // GET: RolesAdmin
-        [Authorize(Roles = "HelpDesk")]
+        [Authorize(Roles = "HelpDesk, MBB Developer")]
         public ActionResult Index()
         {
             return View(RoleManager.Roles);
         }
 
         // GET: RolesAdmin/Details/5
-        [Authorize(Roles = "HelpDesk")]
+        [Authorize(Roles = "HelpDesk, MBB Developer")]
         public async Task<ActionResult> Details(string id)
         {
             if (id == null)
