@@ -13,6 +13,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using VDMS.Models.Helpers;
+using Microsoft.Owin.Security;
 
 namespace VDMS.Controllers
 {
@@ -187,7 +188,6 @@ namespace VDMS.Controllers
 
                 var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
 
-
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First());
@@ -204,6 +204,17 @@ namespace VDMS.Controllers
                 {
                     OperationLogger.LogUserEvent(User.Identity.GetUserId(), user.Id, OperationLogger.GetEnumDescription(OperationType.Edit));
                 }
+
+                if (user.Disabled)
+                {
+                    result = await UserManager.UpdateSecurityStampAsync(user.Id);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", result.Errors.First());
+                        return View();
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", "Something failed.");
@@ -276,5 +287,6 @@ namespace VDMS.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }
