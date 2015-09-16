@@ -19,9 +19,7 @@
             Role
         </dt>
         <dd>
-            @foreach (var item in ViewBag.RoleNames)
-            {@item
-            }
+           @ViewBag.RoleName
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Disabled)
