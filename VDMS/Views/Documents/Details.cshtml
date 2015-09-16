@@ -4,10 +4,9 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Document Details</h2>
 
 <div>
-    <h4>Document</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -72,6 +71,13 @@
 
         <dd>
             @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Disabled)
+        </dt>
+        <dd>
+            @Html.CheckBoxFor(model => model.Disabled, new { disabled = "disabled" })
         </dd>
 
     </dl>

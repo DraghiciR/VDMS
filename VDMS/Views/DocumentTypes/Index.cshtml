@@ -12,12 +12,12 @@
 
 <body>
     @{
-        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", defaultSort: "Name");
         grid.Pager(WebGridPagerModes.NextPrevious);
 
         var gridColumns = new List<WebGridColumn>();
-        gridColumns.Add(grid.Column("Name", "Name"));
-        gridColumns.Add(grid.Column("Serial", "Serial"));
+        gridColumns.Add(grid.Column("Name", @Functions.Sorter("Name", "Name", grid)));
+        gridColumns.Add(grid.Column("Serial", @Functions.Sorter("Serial", "Serial", grid)));
         gridColumns.Add(grid.Column("Disabled", "Disabled",
 format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" type="checkbox" value="@item.Disabled" disabled
                      @(item.Disabled == false ? null : "checked") /></text>
@@ -29,7 +29,7 @@ format:@<text><input class="check-box" id="disabledChkBx" name="disabledChkBx" t
         if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer"))))
         {
             gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Edit", "Edit", new { id = item.DocTypeID })));
-            //gridColumns.Add(grid.Column(format: (item) => Html.ActionLink("Delete", "Delete", new { id = item.DocTypeID })));
+            gridColumns.Add(grid.Column(format: (item) => Html.ActionLink((@item.Disabled ? "Enable" : "Disable"), "Delete", new { id = item.DocTypeID })));
         }
     }
 
