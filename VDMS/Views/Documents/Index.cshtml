@@ -48,24 +48,103 @@
     }
 </p>
 
-<head>
-    <!-- Code to wire up the DatePicker -->
-    <script type="text/javascript">
-        $(function () {
-            // This will make every element with the class "date-picker" into a DatePicker element
-            $('.date-picker').datepicker({
-                dateFormat: "dd-M-yy",
-                showStatus: true,
-                showWeeks: true,
-                currentText: 'Now',
-                autoSize: true,
-                gotoCurrent: true,
-                showAnim: 'blind',
-                highlightWeek: true
-            });;
-        })
-    </script>
+<body>
 
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken();
+        <div class="form-horizontal">
+            <hr />
+
+            <div class="expander">
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.DocTypeID, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
+                            @Html.HiddenFor(model => document.DocTypeID)
+                        </div>
+                    </div>
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.BranchID, "Branch", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
+                            @Html.HiddenFor(model => document.BranchID)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control", id = "comboboxUser" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => document.Recipient, "Recipient", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("Recipient", null, "Select Recipient", htmlAttributes: new { @class = "form-control", id = "comboboxRecipient" })
+                            @Html.HiddenFor(model => document.Recipient)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group col-md-5">
+                        @Html.Label("Origin", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10" id="vdf-radio">
+                            @Html.RadioButton("Inbound", "Inbound") Inbound
+                            @Html.RadioButton("Inbound", "Outbound") Outbound
+                            @Html.RadioButton("Inbound", "All", true) All
+
+                            @Html.HiddenFor(model => document.Inbound)
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        <input type="submit" name="submit" value="Preview" class="btn btn-default" />
+                        &nbsp;  &nbsp;
+                        <input type="submit" name="submit" value="Export" class="btn btn-default" />
+                    </div>
+                </div>
+
+            </div>
+
+            <br /><br />
+            <div id="gridContent">
+                @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
+                 headerStyle: "header",
+                 selectedRowStyle: "select",
+                 columns: grid.Columns(gridColumns.ToArray()))
+
+            </div>
+
+        </div>
+    }
+</body>
+
+@section Scripts{
+
+    <!-- Code to wire up the combo boxes -->
     <script>
         (function ($) {
             $.widget("custom.combobox", {
@@ -76,7 +155,7 @@
 
                     this.element.hide();
                     this._createAutocomplete();
-                   
+
                 },
 
                 _createAutocomplete: function () {
@@ -108,8 +187,6 @@
                         autocompletechange: "_removeIfInvalid"
                     });
                 },
-
-              
 
                 _source: function (request, response) {
                     var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
@@ -164,22 +241,9 @@
             });
         })(jQuery);
 
-        $(function () {
-            $("#combobox").combobox();
-            $("#toggle").click(function () {
-                $("#combobox").toggle();
-            });
-        });
-
-
-        $(function () {
-            $("#comboboxUser").combobox();
-            $("#toggle").click(function () {
-                $("#comboboxUser").toggle();
-            });
-        });
     </script>
 
+    <!-- Code to wire up the Expander -->
     <script type="text/javascript">
         $(function () {
             $('div.expander').expander({
@@ -187,100 +251,30 @@
                 expandText: 'Show Filtering',
                 userCollapseText: 'Hide Filtering'
             });
+
+            //load recipient combobox inside expander
+            $("#comboboxRecipient").combobox();
+            $("#toggle").click(function () {
+                $("#comboboxRecipient").toggle();
+            });
+
+            //load user combobox inside expander
+            $("#comboboxUser").combobox();
+            $("#toggle").click(function () {
+                $("#comboboxUser").toggle();
+            });
+
+            //load DatePicker inside expander
+            $('.date-picker').datepicker({
+                dateFormat: "dd-M-yy",
+                showStatus: true,
+                showWeeks: true,
+                currentText: 'Now',
+                autoSize: true,
+                gotoCurrent: true,
+                highlightWeek: true
+            });
+
         });
     </script>
-
-</head>
-
-<body>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken();
-        <div class="form-horizontal">
-            <hr />
-
-            <div class="expander">
-
-                <div class="form-group">
-                    <div class="form-group col-md-5">
-                        @Html.Label("From", labelText: "From", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextBox("StartDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-5">
-                        @Html.Label("To", labelText: "To", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextBox("EndDate", "", new { @class = "form-control date-picker", @autocomplete = "off" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => document.DocTypeID, "Type", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("DocTypeID", null, "Select Document", htmlAttributes: new { @class = "form-control" })
-                            @Html.HiddenFor(model => document.DocTypeID)
-                        </div>
-                    </div>
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => document.BranchID, "Branch", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("BranchID", null, "Select Branch", htmlAttributes: new { @class = "form-control" })
-                            @Html.HiddenFor(model => document.BranchID)
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-group col-md-5">
-                        @Html.Label("Created by", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("UserID", null, "Select Creator", htmlAttributes: new { @class = "form-control", id = "comboboxUser" })
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => document.Recipient, "Recipient", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("Recipient", null, "Select Recipient", htmlAttributes: new { @class = "form-control", id = "combobox" })
-                            @Html.HiddenFor(model => document.Recipient)
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-group col-md-5">
-                        @Html.Label("Origin", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10" id="vdf-radio">
-                            @Html.RadioButton("Inbound", "Inbound") Inbound
-                            @Html.RadioButton("Inbound", "Outbound") Outbound
-                            @Html.RadioButton("Inbound", "All", true) All
-
-                            @Html.HiddenFor(model => document.Inbound)
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-5">
-                        <input type="submit" name="submit" value="Preview" class="btn btn-default" />
-                        &nbsp;  &nbsp;
-                        <input type="submit" name="submit" value="Export" class="btn btn-default" />
-                    </div>
-                </div>
-
-            </div>
-
-            <br /><br />
-            <div id="gridContent">
-                @grid.GetHtml(tableStyle: "vdf-doc table-responsive",
-                 headerStyle: "header",
-                 selectedRowStyle: "select",
-                 columns: grid.Columns(gridColumns.ToArray()))
-
-            </div>
-
-        </div>
-    }
-</body>
+}
