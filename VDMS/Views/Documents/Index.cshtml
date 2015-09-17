@@ -44,7 +44,7 @@
 <p>
     @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (User.IsInRole("MBB Developer") || (User.IsInRole("User")))))
     {
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Add new document", "Create", null, new { @class="btn btn-default" })
     }
 </p>
 

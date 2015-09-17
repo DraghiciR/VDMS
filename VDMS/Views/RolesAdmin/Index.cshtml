@@ -9,7 +9,7 @@
 <p>
     @if (User.Identity.IsAuthenticated && User.IsInRole("MBB Developer"))
     {
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Add new role", "Create",  null, new { @class="btn btn-default" })
     }
 </p>
 
