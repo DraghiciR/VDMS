@@ -5,6 +5,7 @@
     VDMS.Models.Document document = new VDMS.Models.Document();
 
     var grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent", defaultSort: "CreationDate");
+    grid.SortDirection = SortDirection.Descending;
     grid.Pager(WebGridPagerModes.NextPrevious);
 
     var gridColumns = new List<WebGridColumn>();
