@@ -129,6 +129,12 @@ namespace VDMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Branch branch = db.Branches.Find(id);
+            
+            if (branch == null)
+            {
+                return HttpNotFound();
+            }
+
             branch.Disabled = !branch.Disabled;
             if (!branch.Disabled)
                 branch.DisabledDate = null;
@@ -146,6 +152,11 @@ namespace VDMS.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public VDMSModel GetModel()
+        {
+            return this.db;
         }
     }
 }

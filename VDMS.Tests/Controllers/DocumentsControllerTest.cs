@@ -34,7 +34,7 @@ namespace VDMS.Tests.Controllers
         #region Authenticated User
 
         [TestMethod]
-        public void Index_AuthenticatedUser_ReturnsView() //documents grid
+        public void Documents_Index_AuthenticatedUser_ReturnsView() //documents grid
         {
             try
             {
@@ -52,7 +52,7 @@ namespace VDMS.Tests.Controllers
 
         [Ignore]  //not working because a webgrid is declared inside the method from the controller
         [TestMethod]
-        public void Report_AuthenticatedUser_ExportsToExcel() //report generation
+        public void Documents_Report_AuthenticatedUser_ExportsToExcel() //report generation
         {
             try
             {
@@ -69,7 +69,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Report_AuthenticatedUser_GeneratesPreview() //report preview
+        public void Documents_Report_AuthenticatedUser_GeneratesPreview() //report preview
         {
             try
             {
@@ -86,7 +86,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Create_AuthenticatedUser_UserInUserRole_ReturnsViewCreateDocument()
+        public void Documents_Create_AuthenticatedUser_UserInUserRole_ReturnsViewCreateDocument()
         {
             try
             {
@@ -103,7 +103,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Create_AuthenticatedUser_UserInUserRole_DocumentCreated() //document inserted in DB
+        public void Documents_Create_AuthenticatedUser_UserInUserRole_DocumentCreated() //document inserted in DB
         {
             try
             {
@@ -120,7 +120,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Edit_AuthenticatedUser_UserInAdminRole_ReturnsViewEditDocument()
+        public void Documents_Edit_AuthenticatedUser_UserInAdminRole_ReturnsViewEditDocument()
         {
             try
             {
@@ -129,7 +129,7 @@ namespace VDMS.Tests.Controllers
                 document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).FirstOrDefault();
                 if (document == null)
                 {
-                    Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
+                    Documents_Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
                     document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).First();
                 }
 
@@ -146,7 +146,7 @@ namespace VDMS.Tests.Controllers
 
         //in case of automatic runs, the creation of the document should be run first
         [TestMethod]
-        public void Edit_AuthenticatedUser_UserInUserRole_DocumentUpdated()
+        public void Documents_Edit_AuthenticatedUser_UserInUserRole_DocumentUpdated()
         {
             try
             {
@@ -154,7 +154,7 @@ namespace VDMS.Tests.Controllers
                 document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).FirstOrDefault();
                 if (document == null)
                 {
-                    Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
+                    Documents_Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
                     document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).First();
                 }
                 result = _controller.Edit(EditDocument(document));
@@ -170,7 +170,7 @@ namespace VDMS.Tests.Controllers
 
 
         [TestMethod]
-        public void Delete_AuthenticatedUser_UserInAdminRole_ReturnsViewDeleteDocument()
+        public void Documents_Delete_AuthenticatedUser_UserInAdminRole_ReturnsViewDeleteDocument()
         {
             try
             {
@@ -179,7 +179,7 @@ namespace VDMS.Tests.Controllers
                 document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).FirstOrDefault();
                 if (document == null)
                 {
-                    Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
+                    Documents_Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
                     document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).First();
                 }
 
@@ -196,7 +196,7 @@ namespace VDMS.Tests.Controllers
 
         //in case of automatic runs, the creation and editing of the document should be run first
         [TestMethod]
-        public void Delete_AuthenticatedUser_UserInAdminRole_DocumentDeleted()
+        public void Documents_Delete_AuthenticatedUser_UserInAdminRole_DocumentDeleted()
         {
             try
             {
@@ -205,7 +205,7 @@ namespace VDMS.Tests.Controllers
                 document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).FirstOrDefault();
                 if (document == null)
                 {
-                    Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
+                    Documents_Create_AuthenticatedUser_UserInUserRole_DocumentCreated();
                     document = _controller.db.Documents.Where(doc => doc.Description.Contains("Unit test")).First();
                 }
 
@@ -223,7 +223,7 @@ namespace VDMS.Tests.Controllers
 
         //details of any document
         [TestMethod]
-        public void Details_AuthenticatedUser_ReturnsViewDetailsDocument()
+        public void Documents_Details_AuthenticatedUser_ReturnsViewDetailsDocument()
         {
             try
             {
@@ -244,7 +244,7 @@ namespace VDMS.Tests.Controllers
         #region Insufficient Permissions for Viewer
 
         [TestMethod]
-        public void Create_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        public void Documents_Create_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
         {
             try
             {
@@ -262,7 +262,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Edit_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        public void Documents_Edit_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
         {
             try
             {
@@ -280,7 +280,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Delete_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
+        public void Documents_Delete_UserInViewerRole_ReturnsErrorDueToInsufficientPermissions()
         {
             try
             {
@@ -302,7 +302,7 @@ namespace VDMS.Tests.Controllers
         #region Insufficient Permissions for User
 
         [TestMethod]
-        public void Edit_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
+        public void Documents_Edit_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
         {
             try
             {
@@ -320,7 +320,7 @@ namespace VDMS.Tests.Controllers
         }
 
         [TestMethod]
-        public void Delete_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
+        public void Documents_Delete_UserInUserRole_ReturnsErrorDueToInsufficientPermissions()
         {
             try
             {
