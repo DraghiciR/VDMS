@@ -17,6 +17,7 @@
 
         var gridColumns = new List<WebGridColumn>();
         gridColumns.Add(grid.Column("Email", @Functions.Sorter("Email", "Email", grid)));
+        gridColumns.Add(grid.Column("RoleName", "Role"));
 
         gridColumns.Add(grid.Column("EmailConfirmed","Email Confirmed",format: @<text><input class="check-box" id="confirmedChkBx" name="confirmedChkBx" type="checkbox" value="@item.EmailConfirmed" disabled @(item.EmailConfirmed == false ? null : "checked") /></text>)); 
 

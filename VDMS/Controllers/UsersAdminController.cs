@@ -62,9 +62,17 @@ namespace VDMS.Controllers
         // GET: UserAdmin
         public async Task<ActionResult> Index()
         {
-            return View(await db.Users.ToListAsync());
+            var users = await db.Users.ToListAsync();
+            
+            foreach (var usr in users)
+            {
+                var usrRoleName = UserManager.GetRoles(usr.Id).FirstOrDefault().ToString();
+                usr.RoleName = usrRoleName;
+            }
+            return View(users);
         }
-
+        
+       
         // GET: UserAdmin/Details/5
         public async Task<ActionResult> Details(string id)
         {
