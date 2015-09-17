@@ -18,6 +18,10 @@
 	
 }
 
+.btn-default:hover {
+	color :#fff !important;
+	background-color: #CD0000;
+}
 #vdf-check{
     margin-top:11px;
     margin-left:2px;
