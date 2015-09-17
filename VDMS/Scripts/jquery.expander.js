@@ -65,15 +65,13 @@
                 $this.html([
                       startText,
                       '<span class="read-more">',
-                      //o.expandPrefix,
-                      '<a href="#"><div class="arrow-right"></div></a>',
+                      o.expandPrefix,
                       '<a href="#">',
-                       o.expandText,
+                        o.expandText,
                       '</a>',
-                        '</span>',
+              '</span>',
                       '<span class="details">',
                         endText,
-                       '<a href="#"><div class="arrow-left"></div></a>',
                       '</span>'
                 ].join('')
                 );
