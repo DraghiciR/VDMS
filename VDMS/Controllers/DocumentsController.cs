@@ -32,13 +32,17 @@ namespace VDMS.Controllers
         public ActionResult Index(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
         {
             PopulateViewBag();
-
+            
             List<Document> filteredDocuments = FilterDocuments(startDate, endDate, docTypeID, branchID, userID, inbound, recipient);
 
             if (submit == "Export")
             {
                 string exportContent = GetExcel(filteredDocuments);
                 return File(new System.Text.UTF8Encoding().GetBytes(exportContent), "application/xls", "DocumentsReport.xls");
+            }
+            else if (submit == "Clear filters")
+            {
+                return RedirectToAction("Index");
             }
             else
             {
