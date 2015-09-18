@@ -50,7 +50,7 @@
 
 <body>
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Index", null, FormMethod.Get))
     {
         @Html.AntiForgeryToken();
         <div class="form-horizontal">

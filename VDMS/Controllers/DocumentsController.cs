@@ -29,20 +29,6 @@ namespace VDMS.Controllers
 
         // GET: Documents
         [Authorize(Roles = "Viewer,User,Admin,Helpdesk,MBB Developer")]
-        public ActionResult Index()
-        {
-            PopulateViewBag();
-
-            var documents = db.Documents.Include(d => d.Branch).Include(d => d.DocumentType);
-            foreach (var doc in documents)
-            {
-                doc.UserName = GetUserName(doc.UserID);
-            }
-            return View(documents.ToList());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Index(DateTime? startDate, DateTime? endDate, int? docTypeID, int? branchID, string userID, string inbound, string recipient, string submit)
         {
             PopulateViewBag();
@@ -329,8 +315,8 @@ namespace VDMS.Controllers
             }
             else
             {
-                ViewBag.BranchID = new SelectList(db.Branches.Where(d=>!d.Disabled).OrderBy(d => d.Name), "BranchID", "Name");
-                ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d=>!d.Disabled).OrderBy(d => d.Name), "DocTypeID", "Name");
+                ViewBag.BranchID = new SelectList(db.Branches.Where(d => !d.Disabled).OrderBy(d => d.Name), "BranchID", "Name");
+                ViewBag.DocTypeID = new SelectList(db.DocumentTypes.Where(d => !d.Disabled).OrderBy(d => d.Name), "DocTypeID", "Name");
             }
             ViewBag.UserID = new SelectList(new ApplicationDbContext().Users.ToList().OrderBy(d => d.Email), "Id", "Email");
             ViewBag.Recipient = new SelectList(db.Documents.GroupBy(d => d.Recipient).Select(d => d.FirstOrDefault()), "Recipient", "Recipient");
