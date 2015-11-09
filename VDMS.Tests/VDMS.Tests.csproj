@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BranchesControllerTest.cs" />
     <Compile Include="Controllers\DocumentsControllerTest.cs" />
+    <Compile Include="Controllers\DocumentTypesControllerTest.cs" />
     <Compile Include="Mocks\MockWebContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

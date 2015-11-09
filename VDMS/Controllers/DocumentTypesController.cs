@@ -159,5 +159,10 @@ namespace VDMS.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public VDMSModel GetModel()
+        {
+            return this.db;
+        }
     }
 }
